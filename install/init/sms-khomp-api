@@ -1,0 +1,125 @@
+#!/bin/bash
+#
+# chkconfig: 2345 90 60
+# description:  Daemon Server API Gateway for KHOMP SMS
+# processname: sms-khomp-api
+#
+
+#####################################################
+PREFIX=/usr/share/sms_khomp_api
+PID_PREFIX=/var/run
+
+VENV_ON=/usr/share/virtualenvs/sms-khomp-api/bin/activate
+VENV_OFF=deactivate
+SMS_API_HTTP=$PREFIX/sms_khomp_api.py
+SMS_API_HTTP_PIDFILE=$PID_PREFIX/sms-khomp-api-server.pid
+#####################################################
+
+do_help()
+{
+	echo
+	echo "$(basename $0) (start|stop|restart|status|reload)"
+	echo
+	exit 1;
+}
+
+do_installerror()
+{
+	echo
+	echo "Error : We cannot locate the file $SMS_API_HTTP"
+	echo
+	exit 1;
+}
+
+do_start()
+{
+	NICE=$(which nice)
+	server_already_running="false"
+	$VENV_OFF &>/dev/null
+	source $VENV_ON
+	
+	kill -0 $(cat $SMS_API_HTTP_PIDFILE 2>/dev/null) 2>/dev/null
+	if [ $? -eq 0 ]; then
+		echo "$SERVER_NAME already running"
+		server_already_running="true"
+	else
+		$NICE $SMS_API_HTTP -d -p $SMS_API_HTTP_PIDFILE start
+	fi
+	
+	if [ "$server_already_running" = "true" ]; then
+		$VENV_OFF &>/dev/null
+		exit 0
+	fi
+	
+	sleep 1s
+	if [ "$server_already_running" = "false" ]; then
+		kill -0 $(cat $SMS_API_HTTP_PIDFILE 2>/dev/null) 2>/dev/null \
+			&& echo "$SERVER_NAME started" || echo "$SERVER_NAME start failed"
+	fi
+	$VENV_OFF &>/dev/null
+}
+
+
+do_stop()
+{
+	kill -TERM $(cat $SMS_API_HTTP_PIDFILE 2>/dev/null) 2>/dev/null
+	if [ $? -eq 0 ]; then
+		echo "$SERVER_NAME stopped"
+		rm -f $SMS_API_HTTP_PIDFILE
+	else
+		echo "$SERVER_NAME stopping failed"
+	fi
+}
+
+do_reload()
+{
+	kill -HUP $(cat $SMS_API_HTTP_PIDFILE 2>/dev/null) 2>/dev/null
+	if [ $? -eq 0 ]; then
+		echo "$SERVER_NAME reloaded"
+	else
+		echo "$SERVER_NAME reload failed"
+	fi
+}
+
+
+do_status()
+{
+    echo "status..."
+	kill -0 $(cat $SMS_API_HTTP_PIDFILE 2>/dev/null) 2>/dev/null \
+		&& echo "$SERVER_NAME running" || echo "$SERVER_NAME not running"
+}
+
+
+# main #
+[ -x $SMS_API_HTTP ] || do_installerror
+
+mkdir -p $PID_PREFIX 2>/dev/null
+
+SERVER_NAME="Sms-Khomp-API-Server"
+
+
+case $1 in
+start)
+	do_start
+;;
+
+stop)
+	do_stop
+;;
+
+restart)
+	do_stop
+	sleep 0.5s
+	do_start
+;;
+
+status)
+	do_status
+;;
+reload)
+	do_reload
+;;
+*)
+	do_help
+;;
+esac
