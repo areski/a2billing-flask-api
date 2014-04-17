@@ -163,7 +163,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT 
 Requirements
 ------------
 
-This Application is build using Flask and Peewee :
+This Application is build using Flask and Peewee:
 
     * Flask : http://flask.pocoo.org/
 
@@ -183,7 +183,7 @@ Stress Test
 
 Use ab, the Apache HTTP server benchmarking tool
 
-Usage::
+Usage:
 
     ab -c 100 -n 1000 -p test/post.txt -T application/x-www-form-urlencoded http://localhost:5000/api/cardgroup/
 
@@ -195,9 +195,7 @@ There is many ways to deploy a Flask Application, we will describe the Apache Me
 more suitable for A2Billing users.
 
 
-Reference::
-
-    https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+Reference: https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 
 
 Security
@@ -226,9 +224,7 @@ Coding Conventions
 ------------------
 
 This project is PEP8 compilant and please refer to these sources for the Coding
-Conventions :
-
-    - http://www.python.org/dev/peps/pep-0008/
+Conventions : http://www.python.org/dev/peps/pep-0008/
 
 
 Additional information
