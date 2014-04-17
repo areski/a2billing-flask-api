@@ -4,49 +4,174 @@ A2Billing-Flask-API
 A2Billing Restful APIs in Flask.
 
 
+Each Rest Resource exposed via the API supports, the following:
+
+    /api/<model name>/ – GET and POST requests
+    /api/<model name>/<primary key>/ – GET, PUT and DELETE requests
+
+Also, you can filter results by columns on the model, for example:
+
+    /api/cardgroup/?name=Some%20Blog
+
+
 List of APIs
-~~~~~~~~~~~~
+------------
 
-This is the list of Restful APIs supported:
+This is the list of Restful APIs supported.
 
-    Card : Method [GET/POST/PUT/DELETE]
+CardGroup - Method [GET/POST/PUT/DELETE]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        Get list of card, create new card, Update existing card and
+Get list of card-group, create new card-group, Update/Delete existing card-group.
+
+METHODS::
+
+    GET ALL: curl -u admin:admin http://localhost:5000/api/cardgroup/
+
+    GET ALL FILTER: curl -u admin:admin 'http://localhost:5000/api/cardgroup/?name=DEFAULT'
+
+    GET ONE: curl -u admin:admin http://localhost:5000/api/cardgroup/1
+
+    DELETE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
+
+    ADD: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
+
+    UPDATE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
 
 
+Card - Method [GET/POST/PUT/DELETE]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Get list of card, create new card, Update/Delete existing card.
+
+METHODS::
+
+    GET ALL: curl -u admin:admin http://localhost:5000/api/card/
+
+    GET ALL FILTER: curl -u admin:admin 'http://localhost:5000/api/card/?username=1321546'
+
+    GET ONE: curl -u admin:admin http://localhost:5000/api/card/1/
+
+    DELETE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
+
+    ADD: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/card/
+
+    UPDATE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/card/3/
+
+
+Usage API - Card Group
+----------------------
+
+GET ALL
+~~~~~~~
+
+$ curl -u admin:admin http://localhost:5000/api/cardgroup/
+{
+  "meta": {
+    "model": "cardgroup",
+    "next": "",
+    "page": 1,
+    "previous": ""
+  },
+  "objects": [
+    {
+      "id_agent": null,
+      "description": "This group is the default group used when you create a customer. It's forbidden to delete it because you need at least one group but you can edit it.",
+      "users_perms": 262142,
+      "id": 1,
+      "name": "DEFAULT"
+    },
+    {
+      "id_agent": 0,
+      "description": null,
+      "users_perms": 0,
+      "id": 2,
+      "name": "NewGroup"
+    }
+  ]
+}
+
+GET ONE
+~~~~~~~
+
+$ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
+{
+  "id_agent": null,
+  "description": "This group is the default group used when you create a customer. It's forbidden to delete it because you need at least one group but you can edit it.",
+  "users_perms": 262142,
+  "id": 1,
+  "name": "DEFAULT"
+}
+
+DELETE
+~~~~~~
+
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
+
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 18
+Server: Werkzeug/0.9.4 Python/2.7.5+
+Date: Thu, 17 Apr 2014 16:11:03 GMT
+
+{
+  "deleted": 1
+}
+
+ADD
+~~~
+
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
+
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 96
+Server: Werkzeug/0.9.4 Python/2.7.5+
+Date: Thu, 17 Apr 2014 16:08:55 GMT
+
+{
+  "id_agent": 0,
+  "description": "",
+  "users_perms": 0,
+  "id": 3,
+  "name": "mygroup"
+}
+
+UPDATE
+~~~~~~
+
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 104
+Server: Werkzeug/0.9.4 Python/2.7.5+
+Date: Thu, 17 Apr 2014 16:12:31 GMT
+
+{
+  "id_agent": 0,
+  "description": "",
+  "users_perms": 0,
+  "id": 3,
+  "name": "mygroup-updated"
+}
 
 
 Requirements
 ------------
 
-This Application is build using Flask and Gevent :
+This Application is build using Flask and Peewee :
 
-* Flask : http://flask.pocoo.org/
+    * Flask : http://flask.pocoo.org/
 
+    * Peewee : http://peewee.readthedocs.org/en/latest/
 
+    * Gunicorn : http://gunicorn.org/
 
-Usage
------
+    * WTForms : http://wtforms.readthedocs.org/en/latest/
 
-You can find documentation about the API provided by accessing :
-http://0.0.0.0:5000/v1.0/documentation
+    * MySQL-python : MySQL-python
 
-API Send SMS - http://127.0.0.1:5000/v1.0/sendsms
-
-Parameters::
-
-    @ recipient : Phone Number of the person receving the SMS
-    @ message : Message content to be send on the SMS
-    @ interface : Set the interface to use to send the SMS, default b0"
-
-
-Test with CURL::
-
-    curl --dump-header -X POST --data 'recipient=650234300&message="Hello and welcome to my world!&interface=b0' http://0.0.0.0:5000/v1.0/sendsms
-
-    or without interface,
-
-    curl --dump-header -X POST --data 'recipient=650234300&message="Hello' http://0.0.0.0:5000/v1.0/sendsms
+    * Flask-HTTPAuth : https://pypi.python.org/pypi/Flask-HTTPAuth
 
 
 Stress Test
@@ -56,7 +181,7 @@ Use ab, the Apache HTTP server benchmarking tool
 
 Usage::
 
-    ab -c 100 -n 1000 -p test/post.txt -T application/x-www-form-urlencoded http://0.0.0.0:5000/v1.0/sendsms
+    ab -c 100 -n 1000 -p test/post.txt -T application/x-www-form-urlencoded http://localhost:5000/api/cardgroup/
 
 
 Install & Deployment

@@ -116,7 +116,7 @@ Date: Thu, 17 Apr 2014 16:08:55 GMT
   "users_perms": 0,
   "id": 3,
   "name": "mygroup"
-}%
+}
 
 UPDATE
 ~~~~~~
@@ -148,6 +148,117 @@ class CardGroup(db.Model):
         db_table = 'cc_card_group'
 
 
+
+"""
+API - Card
+----------
+
+GET ALL
+~~~~~~~
+
+$ curl -u admin:admin http://localhost:5000/api/card/
+{
+  "meta": {
+    "model": "card",
+    "next": "",
+    "page": 1,
+    "previous": ""
+  },
+  "objects": [
+    {
+      "email_notification": "areski@gmail.com",
+      "status": 1,
+      "expiredays": null,
+      "loginkey": "4654",
+      "lock_pin": "0",
+      "useralias": "312224525577965",
+      "uipass": "18314euvyzix7spr1eew",
+      "activated": "f",
+      "currency": "USD",
+      "tag": "ok",
+      "initialbalance": 0.0,
+      "voicemail_activated": 0,
+      ...
+      ...
+
+GET ONE
+~~~~~~~
+
+$ curl -u admin:admin http://localhost:5000/api/card/1/
+{
+  "email_notification": "areski@gmail.com",
+  "status": 1,
+  "expiredays": null,
+  "loginkey": "4654",
+  "lock_pin": "0",
+  "useralias": "312224525577965",
+  "uipass": "18314euvyzix7spr1eew",
+  "activated": "f",
+  "currency": "USD",
+  "tag": "ok",
+  "initialbalance": 0.0,
+  "voicemail_activated": 0,
+  "redial": "0",
+  "id": 1,
+  "sip_buddy": 1,
+  "city": "Barcelona",
+  "id_group": 1,
+  ...
+  ...
+
+DELETE
+~~~~~~
+
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
+
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 18
+Server: Werkzeug/0.9.4 Python/2.7.5+
+Date: Thu, 17 Apr 2014 18:50:43 GMT
+
+{
+  "deleted": 1
+}
+
+ADD
+~~~
+
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"lastname": "Belaid", "firstname": "Areski"}' http://localhost:5000/api/card/
+
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 96
+Server: Werkzeug/0.9.4 Python/2.7.5+
+Date: Thu, 17 Apr 2014 16:08:55 GMT
+
+{
+  "id_agent": 0,
+  "description": "",
+  "users_perms": 0,
+  "id": 3,
+  "name": "mygroup"
+}%
+
+UPDATE
+~~~~~~
+
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/card/3/
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 104
+Server: Werkzeug/0.9.4 Python/2.7.5+
+Date: Thu, 17 Apr 2014 16:12:31 GMT
+
+{
+  "id_agent": 0,
+  "description": "",
+  "users_perms": 0,
+  "id": 3,
+  "name": "mygroup-updated"
+}
+"""
+
 class Card(db.Model):
     # user = ForeignKeyField(User, related_name='tweets')
     creationdate = DateTimeField(default=datetime.datetime.now)
@@ -155,7 +266,7 @@ class Card(db.Model):
     expirationdate = CharField(null=True)
     enableexpire = CharField(null=True)
     expiredays = CharField(null=True)
-    username = CharField()
+    username = CharField(null=False)
     useralias = CharField()
     uipass = CharField()
     credit = CharField()
@@ -191,7 +302,8 @@ class Card(db.Model):
     # num_trials_done = CharField(null=True)
     vat = FloatField(null=False, default=0)
     # servicelastrun = CharField(null=True)
-    initialbalance = DecimalField(default=0)
+    # Using DecimalField produce an error
+    initialbalance = FloatField(default=0.0)
     invoiceday = IntegerField(default=1)
     autorefill = IntegerField(default=0)
     loginkey = CharField(default='')
@@ -210,7 +322,8 @@ class Card(db.Model):
     vat_rn = CharField(null=True)
     traffic = BigIntegerField(default=0)
     traffic_target = CharField(default='')
-    discount = DecimalField(default=0)
+    # Using DecimalField produce an error
+    discount = FloatField(default=0.0)
     # restriction = CharField(null=True)
     # id_seria = CharField(null=True)
     # serial = CharField(null=True)
