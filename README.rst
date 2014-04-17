@@ -67,94 +67,97 @@ GET ALL
 ~~~~~~~
 
 $ curl -u admin:admin http://localhost:5000/api/cardgroup/
-{
-  "meta": {
-    "model": "cardgroup",
-    "next": "",
-    "page": 1,
-    "previous": ""
-  },
-  "objects": [
+
+    {
+      "meta": {
+        "model": "cardgroup",
+        "next": "",
+        "page": 1,
+        "previous": ""
+      },
+      "objects": [
+        {
+          "id_agent": null,
+          "description": "This group is the default group used when you create a customer. It's forbidden to delete it because you need at least one group but you can edit it.",
+          "users_perms": 262142,
+          "id": 1,
+          "name": "DEFAULT"
+        },
+        {
+          "id_agent": 0,
+          "description": null,
+          "users_perms": 0,
+          "id": 2,
+          "name": "NewGroup"
+        }
+      ]
+    }
+
+GET ONE
+~~~~~~~
+
+$ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
+
     {
       "id_agent": null,
       "description": "This group is the default group used when you create a customer. It's forbidden to delete it because you need at least one group but you can edit it.",
       "users_perms": 262142,
       "id": 1,
       "name": "DEFAULT"
-    },
-    {
-      "id_agent": 0,
-      "description": null,
-      "users_perms": 0,
-      "id": 2,
-      "name": "NewGroup"
     }
-  ]
-}
-
-GET ONE
-~~~~~~~
-
-$ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
-{
-  "id_agent": null,
-  "description": "This group is the default group used when you create a customer. It's forbidden to delete it because you need at least one group but you can edit it.",
-  "users_perms": 262142,
-  "id": 1,
-  "name": "DEFAULT"
-}
 
 DELETE
 ~~~~~~
 
 $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
 
-HTTP/1.0 200 OK
-Content-Type: application/json
-Content-Length: 18
-Server: Werkzeug/0.9.4 Python/2.7.5+
-Date: Thu, 17 Apr 2014 16:11:03 GMT
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    Content-Length: 18
+    Server: Werkzeug/0.9.4 Python/2.7.5+
+    Date: Thu, 17 Apr 2014 16:11:03 GMT
 
-{
-  "deleted": 1
-}
+    {
+      "deleted": 1
+    }
 
 ADD
 ~~~
 
 $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
 
-HTTP/1.0 200 OK
-Content-Type: application/json
-Content-Length: 96
-Server: Werkzeug/0.9.4 Python/2.7.5+
-Date: Thu, 17 Apr 2014 16:08:55 GMT
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    Content-Length: 96
+    Server: Werkzeug/0.9.4 Python/2.7.5+
+    Date: Thu, 17 Apr 2014 16:08:55 GMT
 
-{
-  "id_agent": 0,
-  "description": "",
-  "users_perms": 0,
-  "id": 3,
-  "name": "mygroup"
-}
+    {
+      "id_agent": 0,
+      "description": "",
+      "users_perms": 0,
+      "id": 3,
+      "name": "mygroup"
+    }
 
 UPDATE
 ~~~~~~
 
 $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
-HTTP/1.0 200 OK
-Content-Type: application/json
-Content-Length: 104
-Server: Werkzeug/0.9.4 Python/2.7.5+
-Date: Thu, 17 Apr 2014 16:12:31 GMT
 
-{
-  "id_agent": 0,
-  "description": "",
-  "users_perms": 0,
-  "id": 3,
-  "name": "mygroup-updated"
-}
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    Content-Length: 104
+    Server: Werkzeug/0.9.4 Python/2.7.5+
+    Date: Thu, 17 Apr 2014 16:12:31 GMT
+
+    {
+      "id_agent": 0,
+      "description": "",
+      "users_perms": 0,
+      "id": 3,
+      "name": "mygroup-updated"
+    }
 
 
 Requirements
