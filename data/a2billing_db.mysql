@@ -3284,29 +3284,8 @@ LOCK TABLES `cc_voucher` WRITE;
 /*!40000 ALTER TABLE `cc_voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `note`
---
 
-DROP TABLE IF EXISTS `note`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `note` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `message` longtext NOT NULL,
-  `created` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `note`
---
-
-LOCK TABLES `note` WRITE;
-/*!40000 ALTER TABLE `note` DISABLE KEYS */;
-/*!40000 ALTER TABLE `note` ENABLE KEYS */;
-UNLOCK TABLES;
+-- Table created by Flask-Peewee
 
 --
 -- Table structure for table `user`
