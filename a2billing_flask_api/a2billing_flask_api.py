@@ -9,7 +9,8 @@ from peewee import *
 
 # TODO:
 # [X] 1. Build proper UI for card
-# [ ] 2. API working with Documentation for Usage
+# [X] 2. Build Restful API
+# [ ]    2.1. Build Documentation for Restful API
 # [X] 3. Fake data
 # [ ] 4. Deployment scripts
 # [ ] 5. Documentation
@@ -26,14 +27,16 @@ DATABASE = {
 }
 
 DEBUG = True
-SECRET_KEY = 'ssshhhh'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+# set the secret key.  keep this really secret
+# Default implementation stores all session data in a signed cookie. This requires that the secret_key is set
+app.secret_key = 'ssshhhh-and-changeme-when-deploying'
+
 # instantiate the db wrapper
 db = Database(app)
-
 
 
 """
@@ -233,7 +236,7 @@ class CardGroupAdmin(ModelAdmin):
 auth = Auth(app, db)
 
 # instantiate the user auth
-user_auth = UserAuthentication(auth)
+user_auth = UserAuthentication(auth, protected_methods=['GET', 'POST', 'PUT', 'DELETE'])
 # create a RestAPI container
 api = RestAPI(app, default_auth=user_auth)
 

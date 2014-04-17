@@ -59,8 +59,8 @@ Usage::
     ab -c 100 -n 1000 -p test/post.txt -T application/x-www-form-urlencoded http://0.0.0.0:5000/v1.0/sendsms
 
 
-Deployment
-----------
+Install & Deployment
+--------------------
 
 There is many ways to deploy a Flask Application, we will describe the Apache Method here as this is the ones
 more suitable for A2Billing users.
@@ -71,9 +71,17 @@ Reference::
     https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 
 
+Security
+~~~~~~~~
+
+Edit a2billing_flaskapi.py and change the secret key:
+
+    # set the secret key.  keep this really secret:
+    app.secret_key = 'ssshhhh-and-changeme-when-deploying'
+
 
 Create an Admin User
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 We now have a functioning admin site! Of course, we’ll need a user log in with,
 so open up an interactive python shell in the directory alongside the app and run the following:
