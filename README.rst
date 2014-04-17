@@ -201,9 +201,8 @@ Reference: https://www.digitalocean.com/community/articles/how-to-deploy-a-flask
 Security
 ~~~~~~~~
 
-Edit a2billing_flaskapi.py and change the secret key:
+Edit a2billing_flaskapi.py and change the secret key and keep this really secret:
 
-    # set the secret key.  keep this really secret:
     app.secret_key = 'ssshhhh-and-changeme-when-deploying'
 
 
