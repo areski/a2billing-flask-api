@@ -7,17 +7,6 @@ from flask_peewee.rest import RestAPI, UserAuthentication
 from peewee import *
 
 
-# TODO:
-# [X] 1. Build proper UI for card
-# [X] 2. Build Restful API
-# [ ]    2.1. Build Documentation for Restful API
-# [X] 3. Fake data
-# [ ] 4. Deployment scripts
-# [ ] 5. Documentation
-# [ ]    5.1. Add Screenshot to Documentation
-#
-
-
 # configure our database
 DATABASE = {
     'name': 'a2billing_db',
