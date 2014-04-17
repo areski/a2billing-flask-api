@@ -7,6 +7,7 @@ A2Billing Restful APIs in Flask.
 Each Rest Resource exposed via the API supports, the following:
 
     /api/<model name>/ – GET and POST requests
+
     /api/<model name>/<primary key>/ – GET, PUT and DELETE requests
 
 Also, you can filter results by columns on the model, for example:
@@ -24,7 +25,7 @@ CardGroup - Method [GET/POST/PUT/DELETE]
 
 Get list of card-group, create new card-group, Update/Delete existing card-group.
 
-METHODS::
+METHODS:
 
     GET ALL: curl -u admin:admin http://localhost:5000/api/cardgroup/
 
@@ -44,7 +45,7 @@ Card - Method [GET/POST/PUT/DELETE]
 
 Get list of card, create new card, Update/Delete existing card.
 
-METHODS::
+METHODS:
 
     GET ALL: curl -u admin:admin http://localhost:5000/api/card/
 
