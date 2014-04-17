@@ -3,7 +3,10 @@ from flask import Flask
 from flask_peewee.auth import Auth
 from flask_peewee.db import Database
 from flask_peewee.admin import Admin, ModelAdmin
-from flask_peewee.rest import RestAPI, UserAuthentication
+from flask_peewee.rest import RestAPI, UserAuthentication, RestResource
+# from flask import Blueprint, abort, request, Response, session, redirect, url_for, g
+from flask import request
+import json
 from peewee import *
 
 
@@ -140,23 +143,42 @@ class CardGroup(db.Model):
         db_table = 'cc_card_group'
 
 
-
 """
-API - Card
-----------
+Usage API - Card
+----------------
 
 GET ALL
 ~~~~~~~
 
 $ curl -u admin:admin http://localhost:5000/api/card/
-{
-  "meta": {
-    "model": "card",
-    "next": "",
-    "page": 1,
-    "previous": ""
-  },
-  "objects": [
+    {
+      "meta": {
+        "model": "card",
+        "next": "",
+        "page": 1,
+        "previous": ""
+      },
+      "objects": [
+        {
+          "email_notification": "areski@gmail.com",
+          "status": 1,
+          "expiredays": null,
+          "loginkey": "4654",
+          "lock_pin": "0",
+          "useralias": "312224525577965",
+          "uipass": "18314euvyzix7spr1eew",
+          "activated": "f",
+          "currency": "USD",
+          "tag": "ok",
+          "initialbalance": 0.0,
+          "voicemail_activated": 0,
+          ...
+          ...
+
+GET ONE
+~~~~~~~
+
+$ curl -u admin:admin http://localhost:5000/api/card/1/
     {
       "email_notification": "areski@gmail.com",
       "status": 1,
@@ -170,86 +192,97 @@ $ curl -u admin:admin http://localhost:5000/api/card/
       "tag": "ok",
       "initialbalance": 0.0,
       "voicemail_activated": 0,
+      "redial": "0",
+      "id": 1,
+      "sip_buddy": 1,
+      "city": "Barcelona",
+      "id_group": 1,
       ...
       ...
-
-GET ONE
-~~~~~~~
-
-$ curl -u admin:admin http://localhost:5000/api/card/1/
-{
-  "email_notification": "areski@gmail.com",
-  "status": 1,
-  "expiredays": null,
-  "loginkey": "4654",
-  "lock_pin": "0",
-  "useralias": "312224525577965",
-  "uipass": "18314euvyzix7spr1eew",
-  "activated": "f",
-  "currency": "USD",
-  "tag": "ok",
-  "initialbalance": 0.0,
-  "voicemail_activated": 0,
-  "redial": "0",
-  "id": 1,
-  "sip_buddy": 1,
-  "city": "Barcelona",
-  "id_group": 1,
-  ...
-  ...
 
 DELETE
 ~~~~~~
 
 $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
 
-HTTP/1.0 200 OK
-Content-Type: application/json
-Content-Length: 18
-Server: Werkzeug/0.9.4 Python/2.7.5+
-Date: Thu, 17 Apr 2014 18:50:43 GMT
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    Content-Length: 18
+    Server: Werkzeug/0.9.4 Python/2.7.5+
+    Date: Thu, 17 Apr 2014 18:50:43 GMT
 
-{
-  "deleted": 1
-}
+    {
+      "deleted": 1
+    }
 
 ADD
 ~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"lastname": "Belaid", "firstname": "Areski"}' http://localhost:5000/api/card/
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"username": "1234567890", "useralias": "0554654648", "lastname": "Belaid", "firstname": "Areski", "uipass": "6546456", "credit": "5", "tariff": "1"}' http://localhost:5000/api/card/
 
-HTTP/1.0 200 OK
-Content-Type: application/json
-Content-Length: 96
-Server: Werkzeug/0.9.4 Python/2.7.5+
-Date: Thu, 17 Apr 2014 16:08:55 GMT
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    Content-Length: 1257
+    Server: Werkzeug/0.9.4 Python/2.7.5+
+    Date: Thu, 17 Apr 2014 23:33:14 GMT
 
-{
-  "id_agent": 0,
-  "description": "",
-  "users_perms": 0,
-  "id": 3,
-  "name": "mygroup"
-}%
+    {
+      "email_notification": "",
+      "status": 1,
+      "expiredays": null,
+      "loginkey": "",
+      "lock_pin": null,
+      "useralias": "0554654648",
+      "uipass": "6546456",
+      "activated": null,
+      "currency": "USD",
+      "tag": "",
+      "initialbalance": 0.0,
+      "voicemail_activated": 0,
+      "redial": "",
+      "id": 7,
+      "sip_buddy": 0,
+      "city": "",
+      "id_group": 1,
+      "notify_email": 0,
+      ...
+      ...
+
 
 UPDATE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/card/3/
-HTTP/1.0 200 OK
-Content-Type: application/json
-Content-Length: 104
-Server: Werkzeug/0.9.4 Python/2.7.5+
-Date: Thu, 17 Apr 2014 16:12:31 GMT
+$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"lastname": "Belaid"}' http://localhost:5000/api/card/7/
 
-{
-  "id_agent": 0,
-  "description": "",
-  "users_perms": 0,
-  "id": 3,
-  "name": "mygroup-updated"
-}
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    Content-Length: 1290
+    Server: Werkzeug/0.9.4 Python/2.7.5+
+    Date: Thu, 17 Apr 2014 23:36:10 GMT
+
+    {
+      "email_notification": "",
+      "status": 1,
+      "expiredays": "",
+      "loginkey": "",
+      "lock_pin": null,
+      "useralias": "0554654648",
+      "uipass": "6546456",
+      "activated": "f",
+      "currency": "USD",
+      "tag": "",
+      "initialbalance": 0.0,
+      "voicemail_activated": 0,
+      "redial": "",
+      "id": 7,
+      "sip_buddy": 0,
+      "city": "",
+      "id_group": 1,
+      "notify_email": 0,
+      ...
+      ...
 """
+
 
 class Card(db.Model):
     # user = ForeignKeyField(User, related_name='tweets')
@@ -337,6 +370,25 @@ class CardGroupAdmin(ModelAdmin):
     columns = ('id', 'name',)
 
 
+# create a special resource for users that excludes email and password
+class CardResource(RestResource):
+    # exclude = ('lock_pin',)
+
+    def check_post(self):
+        datajson = json.loads(request.data)
+        if 'username' not in datajson or len(datajson['username']) == 0:
+            return False
+        if 'useralias' not in datajson or len(datajson['useralias']) == 0:
+            return False
+        if 'uipass' not in datajson or len(datajson['uipass']) == 0:
+            return False
+        if 'credit' not in datajson or len(datajson['credit']) == 0:
+            return False
+        if 'tariff' not in datajson or len(datajson['tariff']) == 0:
+            return False
+
+        return True
+
 # create an Auth object for use with our flask app and database wrapper
 auth = Auth(app, db)
 
@@ -346,7 +398,7 @@ user_auth = UserAuthentication(auth, protected_methods=['GET', 'POST', 'PUT', 'D
 api = RestAPI(app, default_auth=user_auth)
 
 # register the Note model
-api.register(Card, auth=user_auth)
+api.register(Card, CardResource, auth=user_auth)
 api.register(CardGroup, auth=user_auth)
 # api.register(User, UserResource, auth=admin_auth)
 api.setup()
