@@ -1,366 +1,144 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from gevent import monkey
-monkey.patch_all()
-
-from gevent.event import Event
-from gevent.wsgi import WSGIServer
-from flask import Flask, request, abort
-from werkzeug.utils import escape
-from time import sleep
-import ESL
-from singleton import singleton
-
-import sys
-import logging
-import optparse
-from daemon import Daemon
-from werkzeug.exceptions import BadRequest, InternalServerError
-
-import redis
-from random import randint
-from uuid import uuid1
-import re
-
-__version__ = 'v1.0'
-
-PORT = 5000
-
-#Event Socket
-EVENTSOCKET_HOST = '127.0.0.1'
-EVENTSOCKET_PORT = '8021'
-EVENTSOCKET_PASSWORD = 'ClueCon'
-
-TESTDEBUG = False
-
-# List of interface of Khomp Card
-#INTERFACE_LIST = ['*b0', '*b1', '*b2', '*b3']
-INTERFACE_LIST = ['*b0']
-# Number of SIM cards on the Khomp Card
-N_SIM = 4
-#Expire Ressource / 300 seconds
-SIM_TTL = 10
-#Ressouce name
-RESNAME = 'interface'
-
-r_server = redis.Redis(host='localhost', port=6379)
+import datetime
+from flask import Flask
+from flask_peewee.auth import Auth
+from flask_peewee.db import Database
+from flask_peewee.admin import Admin, ModelAdmin
+from flask_peewee.rest import RestAPI, UserAuthentication
+from peewee import *
 
 
-def interface_reserve(sinterface=None):
-    """This function will try to find an interface we can use to send SMS
-    which hasn't been busy for the last SIM_TTL
-    it will select randomly an interface and then will increment to find
-    one that is available.
-    """
-    #Get Random SIM
-    randsim = randint(1, N_SIM)
-
-    if sinterface:
-        #Search on a Specific Interface
-        for i in range(1, N_SIM + 1):
-            nextsim = (randsim + i) % N_SIM + 1
-            mkey = "%s-%s-%d" % (RESNAME,
-                        sinterface,
-                        nextsim)
-            if not r_server.get(mkey):
-                #Reserve ressource
-                r_server.set(mkey, 1)
-                r_server.expire(mkey, SIM_TTL)
-                return mkey
-    else:
-        #Get random interface
-        randinterf = randint(0, len(INTERFACE_LIST) - 1)
-
-        for j in range(len(INTERFACE_LIST)):
-            nextinterf = (randinterf + j) % len(INTERFACE_LIST)
-            for i in range(1, N_SIM + 1):
-                nextsim = (randsim + i) % N_SIM + 1
-                mkey = "%s-%s-%d" % (RESNAME,
-                            INTERFACE_LIST[nextinterf],
-                            nextsim)
-                if not r_server.get(mkey):
-                    #reserve ressource
-                    r_server.set(mkey, 1)
-                    r_server.expire(mkey, SIM_TTL)
-                    return mkey
-                #else:
-                    #Ressource busy
-                    #print "Ressource Busy"
-    return False
+# TODO:
+# 1. Build proper UI for card
+# 2. API working with Documentation for Usage
+# 3. Fake data
+# 4. Deployment scripts
+# 5. Documentation
+# 5.1. Add Screenshot to Documentation
+#
 
 
-# for k in range(1, 20):
-#     res_interface = interface_reserve()
-#     #res_interface = interface_reserve('b0')
-#     print res_interface
-# sys.exit()
+# configure our database
+DATABASE = {
+    'name': 'a2billing_db',
+    'engine': 'peewee.MySQLDatabase',
+    'user': 'root',
+    'passwd': 'password',
+}
 
-@singleton
-class connectESL(object):
-    def __init__(self, host, port, password):
-        self.host = host
-        self.port = port
-        self.password = password
-        self.con = ESL.ESLconnection(self.host, self.port, self.password)
-
-    def spam_connection(self):
-        return self.con
-
-    def reconnect(self):
-        self.con = ESL.ESLconnection(self.host, self.port, self.password)
-
-handler_esl = connectESL(
-    EVENTSOCKET_HOST,
-    EVENTSOCKET_PORT,
-    EVENTSOCKET_PASSWORD)
+DEBUG = True
+SECRET_KEY = 'ssshhhh'
 
 app = Flask(__name__)
+app.config.from_object(__name__)
 
-#setup logger
-logger = logging.getLogger("sms_khomp_api")
-logger.setLevel(logging.DEBUG)
-
-# create file handler which logs even debug messages
-fh = logging.FileHandler("/var/log/sms-khomp-api/sms_khomp_api.log")
-fh.setLevel(logging.DEBUG)
-
-# create formatter and add it to the handlers
-formatter = logging.Formatter("%(asctime)s [%(levelname)s] "
-    "%(name)s\t%(message)s", datefmt="%Y-%m-%d %H:%M:%S")
-fh.setFormatter(formatter)
-
-# add the handlers to the logger
-logger.addHandler(fh)
+# instantiate the db wrapper
+db = Database(app)
 
 
-# see https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/exceptions.py
-class MyBadRequest(BadRequest):
-    def get_body(self, environ):
-        return (
-            'ERR: %(name)s %(description)s %(code)s'
-        ) % {
-            'code': self.code,
-            'name': escape(self.name),
-            'description': self.get_description(environ)
-        }
+class Card(db.Model):
+    # user = ForeignKeyField(User, related_name='tweets')
+    creationdate = DateTimeField(default=datetime.datetime.now)
+    firstusedate = CharField(null=True)
+    expirationdate = CharField(null=True)
+    enableexpire = CharField(null=True)
+    expiredays = CharField(null=True)
+    username = CharField()
+    useralias = CharField()
+    uipass = CharField()
+    credit = CharField()
+    tariff = CharField()
+    id_didgroup = CharField(null=True)
+    activated = CharField(choices=(('f', 'False'), ('t', 'True')))
+    status = IntegerField(default=1)
+    lastname = CharField(default='')
+    firstname = CharField(default='')
+    address = CharField(default='')
+    city = CharField(default='')
+    state = CharField(default='')
+    country = CharField(default='')
+    zipcode = CharField(default='')
+    phone = CharField(default='')
+    email = CharField(default='')
+    fax = CharField(default='')
+    # inuse = CharField(null=True)
+    simultaccess = IntegerField(default=0)
+    currency = CharField(default='USD')
+    # lastuse = CharField(null=True)
+    # nbused = CharField(null=True)
+    typepaid = IntegerField(default=0)
+    creditlimit = IntegerField(default=0)
+    voipcall = IntegerField(default=0)
+    sip_buddy = IntegerField(default=0)
+    iax_buddy = IntegerField(default=0)
+    language = CharField(default='en')
+    redial = CharField(default='')
+    runservice = CharField(null=True)
+    # nbservice = CharField(null=True)
+    # id_campaign = CharField(null=True)
+    # num_trials_done = CharField(null=True)
+    vat = FloatField(null=False, default=0)
+    # servicelastrun = CharField(null=True)
+    initialbalance = DecimalField(default=0)
+    invoiceday = IntegerField(default=1)
+    autorefill = IntegerField(default=0)
+    loginkey = CharField(default='')
+    mac_addr = CharField(default='00-00-00-00-00-00')
+    id_timezone = IntegerField(default=0)
+    tag = CharField(default='')
+    voicemail_permitted = IntegerField(default=0)
+    voicemail_activated = IntegerField(default=0)
+    # last_notification = CharField(null=True)
+    email_notification = CharField(default='')
+    notify_email = IntegerField(default=0)
+    credit_notification = IntegerField(default=-1)
+    id_group = IntegerField(default=1)
+    company_name = CharField(default='')
+    company_website = CharField(default='')
+    vat_rn = CharField(null=True)
+    traffic = BigIntegerField(default=0)
+    traffic_target = CharField(default='')
+    discount = DecimalField(default=0)
+    # restriction = CharField(null=True)
+    # id_seria = CharField(null=True)
+    # serial = CharField(null=True)
+    block = IntegerField(default=0)
+    lock_pin = CharField(null=True)
+    lock_date = DateTimeField(null=True)
+    max_concurrent = IntegerField(default=10)
+    # is_published = BooleanField(default=True)
+
+    class Meta:
+        db_table = 'cc_card'
 
 
-class MyInternalServerError(InternalServerError):
-    def get_body(self, environ):
-        return (
-            'ERR: %(name)s %(description)s %(code)s'
-        ) % {
-            'code': self.code,
-            'name': escape(self.name),
-            'description': self.get_description(environ)
-        }
-
-abort.mapping.update({400: MyBadRequest})
-abort.mapping.update({500: MyInternalServerError})
+class CardAdmin(ModelAdmin):
+    columns = ('username', 'creationdate',)
 
 
-#Add Flask Routes
-@app.route("/")
-def index():
-    return "Welcome to Khomp SMS API " + __version__
+# create an Auth object for use with our flask app and database wrapper
+auth = Auth(app, db)
+
+# instantiate the user auth
+user_auth = UserAuthentication(auth)
+# create a RestAPI container
+api = RestAPI(app, default_auth=user_auth)
+
+# register the Note model
+api.register(Card, auth=user_auth)
+# api.register(User, UserResource, auth=admin_auth)
+api.setup()
 
 
-@app.route("/documentation/")
-def documenation():
-    documentation = "<b>DOCUMENTATION</b><br>"\
-        "------------------------------<br/>"\
-        "<br/>Send SMS - Url <b>/v1.0/sendsms</b><br/><br/>"\
-        "Parameters :<br/>"\
-        " @ recipient : Phone Number of the person receving the SMS<br>"\
-        " @ message : Message content to be send on the SMS<br/>"\
-        " @ interface : Set the interface to use to send the SMS, default b0"
-    return documentation
-
-#@app.route('/v1.0/sendsms/<recipient>/<sender>/<message>')
-#def sendsms(recipient, sender, message):
-#    # show the user profile for that user
-#    return 'Send SMS %s / %s / %s' % (recipient, sender, message)
+admin = Admin(app, auth)
+admin.register(Card, CardAdmin)
+auth.register_admin(admin)
+admin.setup()
 
 
-@app.route('/v1.0/sendsms', methods=['POST'])
-def sendsms():
-    if request.method == 'POST':
-        if 'recipient' in request.form \
-           and 'message' in request.form:
+if __name__ == '__main__':
+    auth.User.create_table(fail_silently=True)
+    # Note.create_table(fail_silently=True)
 
-            if 'interface' in request.form \
-               and len(request.form['interface']) > 1:
-                #Get interface
-                interface = request.form['interface']
-            else:
-                interface = None
-
-            recipient = request.form['recipient']
-            message = request.form['message']
-
-            if (TESTDEBUG):
-                #reserve a ressource
-                rsd_int = interface_reserve(interface)
-                if not rsd_int:
-                    #TODO: Check 500 code, replace something for throttle
-                    abort(500, 'ERR: Ressource unvailable throttle')
-
-                interface = rsd_int.split('-')[1]
-                logger.info("Ressource is being used %s - %s" %
-                    (rsd_int, interface))
-                sleep(0.001)
-
-                #Prepare SMS command
-                command_string = "sms %s %s '%s'" % \
-                    (str(interface), str(recipient), str(message))
-                logger.info(command_string)
-
-                #Send SMS Via Khomp FreeSWITCH API
-                #...
-
-                #Free ressource
-                r_server.delete(rsd_int)
-                return "ID: %s Mock SMS Success 200" % str(uuid1())
-            else:
-                #reserve a ressource
-                rsd_int = interface_reserve(interface)
-                if not rsd_int:
-                    #TODO: Check 500 code, replace something for throttle
-                    logger.error("ERR: Ressource unvailable throttle")
-                    abort(500, 'ERR: Ressource unvailable throttle')
-
-                interface = rsd_int.split('-')[1]
-                logger.info("Ressource is being used %s - %s" %
-                    (rsd_int, interface))
-
-                if not handler_esl.con.connected():
-                    #Try to reconnect
-                    handler_esl.reconnect()
-                    if not handler_esl.con.connected():
-                        r_server.delete(rsd_int)
-                        abort(500, 'ERR: Cannot connect to FreeSWITCH')
-
-                #Prepare SMS command
-                command_string = "concise sms %s %s '%s'" % \
-                    (str(interface), str(recipient), str(message))
-
-                try:
-                    #Send SMS via Khomp API
-                    ev = handler_esl.con.api("khomp", command_string)
-                    #Retrieve result
-                    result = ev.getBody()
-                    logger.info(result)
-                except AttributeError:
-                    #Free ressource
-                    r_server.delete(rsd_int)
-                    abort(500, 'ID: %s (Internal Error Get Result) 501')
-
-                #Free ressource
-                r_server.delete(rsd_int)
-
-                #Parse result code
-                if result.find('OK') > 0:
-                    return "ID: %s (Success) 200" % str(uuid1())
-                else:
-                    try:
-                        m = re.search('-*\d+', result)
-                        err_code = m.group(0)
-                    except:
-                        err_code = '502'
-                    try:
-                        m = re.search('\(.+\)', result)
-                        err_message = m.group(0)
-                    except:
-                        err_message = '(Internal Error Parse Err)'
-                    return "ID: %s %s %s" % (
-                        str(uuid1()),
-                        err_message,
-                        err_code)
-
-            #return 'Received POST ==> Send SMS %s / %s / %s' % \
-            #        (request.form['recipient'], request.form['message'],
-            #        request.form['interface'])
-        else:
-            if not 'recipient' in request.form:
-                abort(404, 'ERR: Missing parameter "recipient" on POST')
-            if not 'message' in request.form:
-                abort(404, 'ERR: Missing parameter "message" on POST')
-            if not 'interface' in request.form:
-                abort(404, 'ERR: Missing parameter "interface" on POST')
-            abort(404, 'ERR: Missing parameters on POST')
-    else:
-        return 'OK: Send recipient, sender and message via POST'
-
-
-class StdErrWrapper:
-    def __init__(self):
-        self.logger = logging.getLogger("sms_khomp_api.access")
-
-    def write(self, s):
-        self.logger.info(s.rstrip())
-
-
-class MyDaemon(Daemon):
-    def run(self):
-        #while True:
-        self.logger = logging.getLogger("sms_khomp_api")
-        self.logger.info("Creating sms_khomp_api")
-        #Run WSGIServer
-        http = WSGIServer(('', PORT), app.wsgi_app)
-        http.serve_forever()
-        self.logger.info("Done.")
-
-
-if __name__ == "__main__":
-    parser = optparse.OptionParser(usage="usage: %prog -d|c|m|e [options]",
-                    version="SMS Khomp API Server " + __version__)
-    parser.add_option("-c", "--config", action="store", dest="config",
-                    default="configfile.cfg", help="Path to config file",)
-    parser.add_option("-d", "--daemon", action="store_true", dest="daemon",
-                    default=False, help="Start as daemon",)
-    parser.add_option("-e", "--debug", action="store_true", dest="debug",
-                    default=False, help="Start in debug mode",)
-    parser.add_option("-m", "--master", action="store_true", dest="master",
-                    default=False, help="Start master in foreground",)
-    parser.add_option("-p", "--pid", action="store", dest="pid",
-                    default="/tmp/sms_khomp_api.pid", help="Path to pid file",)
-
-    (options, args) = parser.parse_args()
-    if options.daemon:
-        daemon = MyDaemon(options.pid)
-
-        if len(args) != 1:
-            parser.error("Missing parameters : "
-                "sms_khomp_api.py -d start|stop|restart")
-
-        if "start" == args[0]:
-            daemon.start()
-        elif "stop" == args[0]:
-            daemon.stop()
-        elif "restart" == args[0]:
-            daemon.restart()
-        else:
-            print "Unknown command"
-            sys.exit(2)
-        sys.exit(0)
-
-    elif options.master:
-        print "Starting as master (PORT:%d)..." % PORT
-        daemon = MyDaemon(options.pid)
-        #daemon.load_config(options.config)
-        try:
-            daemon.run()
-        except KeyboardInterrupt:
-            print "\nGot Ctrl-C, shutting down..."
-        except Exception, e:
-            print "Oops...", e
-        print "Bye!"
-
-    elif options.debug:
-        print "Starting in debug mode (PORT:%d)..." % PORT
-        app.debug = True
-        app.run(host='0.0.0.0', port=PORT)
-
-    else:
-        parser.print_usage()
-        sys.exit(1)
+    # app.debug = True
+    # app.run(host='0.0.0.0', port=PORT)
+    app.run()

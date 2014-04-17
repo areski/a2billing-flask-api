@@ -1,4 +1,14 @@
-Flask==0.8
-gevent==0.13.7
-redis==2.4.13
+Flask==0.10.1
+Jinja2==2.7.2
+MarkupSafe==0.19
+Werkzeug==0.9.4
+argparse==1.2.1
+itsdangerous==0.24
+wsgiref==0.1.2
+flask-httpauth
+
 gunicorn==0.14.5
+
+Flask-SQLAlchemy==0.16
+SQLAlchemy==0.8.0b2
+psycopg2==2.4.6
