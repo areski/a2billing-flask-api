@@ -16,15 +16,12 @@
 # cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install.sh -O install.sh ; bash install.sh
 #
 
-# TODO:
-1. Copy apache conf
-2
-
-
 
 INSTALL_MODE='CLONE'
 INSTALL_DIR='/usr/share/a2billing-flask-api'
 INSTALL_ENV="a2billing-flask-api"
+HTTP_PORT="8008"
+SECRET=`</dev/urandom tr -dc 0-9| (head -c $1 > /dev/null 2>&1 || head -c 5)`
 
 
 #Include general functions
@@ -38,9 +35,6 @@ func_identify_os
 
 #Fuction to create the virtual env
 func_setup_virtualenv() {
-
-    echo ""
-    echo ""
     echo "This will install virtualenv & virtualenvwrapper"
     echo "and create a new virtualenv : $INSTALL_ENV"
 
@@ -67,22 +61,81 @@ func_setup_virtualenv() {
 }
 
 
-#Function to install Frontend
-func_install(){
+#Function to configure Apache
+func_configure_http_server(){
+    # prepare Apache
+    echo "Prepare Apache configuration..."
+    echo '
+    '$WSGI_ADDITIONAL'
 
-    echo ""
+    Listen *:'$HTTP_PORT'
+
+    <VirtualHost *:'$HTTP_PORT'>
+        DocumentRoot '$INSTALL_DIR'/
+        ErrorLog /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
+        LogLevel warn
+
+        #WSGIPassAuthorization On
+        WSGIDaemonProcess a2billing_flask_app user='$APACHE_USER' user='$APACHE_USER' threads=25
+        WSGIProcessGroup a2billing_flask_app
+        WSGIScriptAlias / '$INSTALL_DIR'/a2billing_flask_app.wsgi
+
+        <Directory '$INSTALL_DIR'>
+            WSGIProcessGroup a2billing_flask_app
+            WSGIApplicationGroup %{GLOBAL}
+            AllowOverride all
+            Order deny,allow
+            Allow from all
+            '$WSGIApplicationGroup'
+        </Directory>
+
+    </VirtualHost>
+    ' > $APACHE_CONF_DIR/a2billing_flask_app.conf
+    #correct the above file
+    sed -i "s/@/'/g"  $APACHE_CONF_DIR/a2billing_flask_app.conf
+
+    #Restart HTTP Server
+    service $APACHE_SERVICE restart
+}
+
+
+#Configure Logs files and logrotate
+func_prepare_logger() {
+    mkdir /var/log/a2billing-flask-api/
+    touch /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
+    touch /var/log/a2billing-flask-api/a2billing_flask_api.log
+    chown -R $APACHE_USER:$APACHE_USER /var/log/cdr-stats
+
+    rm /etc/logrotate.d/a2billing_flask_api
+    touch /etc/logrotate.d/a2billing_flask_api
+    echo '
+/var/log/a2billing-flask-api/*.log {
+        daily
+        rotate 10
+        size = 50M
+        missingok
+        compress
+    }
+'  > /etc/logrotate.d/a2billing_flask_api
+
+    logrotate /etc/logrotate.d/a2billing_flask_api
+}
+
+
+#Function to install Frontend
+func_install() {
     echo ""
     echo "We will now install a2billing-flask-api on your server"
-	echo "================================================"
+	echo "======================================================"
     echo ""
-
     #python setup tools
     echo "Install Dependencies and Python modules..."
+    echo ""
     case $DIST in
         'DEBIAN')
             apt-get -y install python-setuptools python-dev build-essential git-core mercurial gawk
             easy_install pip
-            apt-get -y install libapache2-mod-wsgi
+            apt-get -y install libapache2-mod-python libapache2-mod-wsgi
         ;;
         'CENTOS')
             if [ "$INSTALLMODE" = "FULL" ]; then
@@ -121,7 +174,9 @@ func_install(){
     echo "Install a2billing-flask-api..."
     cd /usr/src/
     rm -rf a2billing-flask-api
-    mkdir /var/log/a2billing-flask-api
+
+    #Configure Logs files and logrotate
+    func_prepare_logger
 
     case $INSTALL_MODE in
         'CLONE')
@@ -140,14 +195,11 @@ func_install(){
         pip install $line
     done
 
-    cd $INSTALL_DIR/
-
     #Fix permission on python-egg
     mkdir $INSTALL_DIR/.python-eggs
 
     #Run Gunicorn and Flask
     /usr/share/virtualenvs/a2billing-flask-api/bin/python /usr/share/virtualenvs/a2billing-flask-api/bin/gunicorn a2billing_flask_api:app -c /usr/share/a2billing_flask_api/gunicorn.conf.py
-
 
     echo ""
     echo "*************************************************************"

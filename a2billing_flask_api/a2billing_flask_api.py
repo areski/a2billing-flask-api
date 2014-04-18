@@ -9,8 +9,7 @@ from flask import request
 import json
 from peewee import *
 
-
-# configure our database
+# Configure your A2Billing database
 DATABASE = {
     'name': 'a2billing_db',
     'engine': 'peewee.MySQLDatabase',
@@ -18,16 +17,14 @@ DATABASE = {
     'passwd': 'password',
 }
 
-DEBUG = True
-
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-# set the secret key.  keep this really secret
+# Set the secret key.  keep this really secret
 # Default implementation stores all session data in a signed cookie. This requires that the secret_key is set
 app.secret_key = 'ssshhhh-and-changeme-when-deploying'
 
-# instantiate the db wrapper
+# Instantiate the db wrapper
 db = Database(app)
 
 
@@ -415,6 +412,6 @@ if __name__ == '__main__':
     auth.User.create_table(fail_silently=True)
     # Note.create_table(fail_silently=True)
 
-    app.debug = True
+    # app.debug = True
     # app.run(host='0.0.0.0', port=PORT)
     app.run()
