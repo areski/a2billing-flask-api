@@ -27,17 +27,17 @@ Get list of card-group, create new card-group, Update/Delete existing card-group
 
 METHODS:
 
-    GET ALL: curl -u admin:admin http://localhost:5000/api/cardgroup/
+    GET ALL: curl -u username:password http://localhost:5000/api/cardgroup/
 
-    GET ALL FILTER: curl -u admin:admin 'http://localhost:5000/api/cardgroup/?name=DEFAULT'
+    GET ALL FILTER: curl -u username:password 'http://localhost:5000/api/cardgroup/?name=DEFAULT'
 
-    GET ONE: curl -u admin:admin http://localhost:5000/api/cardgroup/1
+    GET ONE: curl -u username:password http://localhost:5000/api/cardgroup/1
 
-    DELETE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
+    DELETE: curl -u username:password --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
 
-    ADD: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
+    ADD: curl -u username:password --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
 
-    UPDATE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
+    UPDATE: curl -u username:password --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
 
 
 Card - Method [GET/POST/PUT/DELETE]
@@ -47,17 +47,17 @@ Get list of card, create new card, Update/Delete existing card.
 
 METHODS:
 
-    GET ALL: curl -u admin:admin http://localhost:5000/api/card/
+    GET ALL: curl -u username:password http://localhost:5000/api/card/
 
-    GET ALL FILTER: curl -u admin:admin 'http://localhost:5000/api/card/?username=1321546'
+    GET ALL FILTER: curl -u username:password 'http://localhost:5000/api/card/?username=1321546'
 
-    GET ONE: curl -u admin:admin http://localhost:5000/api/card/1/
+    GET ONE: curl -u username:password http://localhost:5000/api/card/1/
 
-    DELETE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
+    DELETE: curl -u username:password --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
 
-    ADD: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/card/
+    ADD: curl -u username:password --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/card/
 
-    UPDATE: curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/card/3/
+    UPDATE: curl -u username:password --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/card/3/
 
 
 Usage API - Card Group
@@ -70,7 +70,7 @@ the Customer UI.
 GET ALL
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/cardgroup/
+$ curl -u username:password http://localhost:5000/api/cardgroup/
 
     {
       "meta": {
@@ -100,7 +100,7 @@ $ curl -u admin:admin http://localhost:5000/api/cardgroup/
 GET ONE
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
+$ curl -u username:password http://localhost:5000/api/cardgroup/1/
 
     {
       "id_agent": null,
@@ -113,7 +113,7 @@ $ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
 DELETE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -128,7 +128,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELE
 ADD
 ~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -147,7 +147,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST
 UPDATE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -174,7 +174,7 @@ the users, such as names, address, balance, etc..
 GET ALL
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/card/
+$ curl -u username:password http://localhost:5000/api/card/
     {
       "meta": {
         "model": "card",
@@ -202,7 +202,7 @@ $ curl -u admin:admin http://localhost:5000/api/card/
 GET ONE
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/card/1/
+$ curl -u username:password http://localhost:5000/api/card/1/
     {
       "email_notification": "areski@gmail.com",
       "status": 1,
@@ -227,7 +227,7 @@ $ curl -u admin:admin http://localhost:5000/api/card/1/
 DELETE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -242,7 +242,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELE
 ADD
 ~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"username": "1234567890", "useralias": "0554654648", "lastname": "Belaid", "firstname": "Areski", "uipass": "6546456", "credit": "5", "tariff": "1"}' http://localhost:5000/api/card/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X POST --data '{"username": "1234567890", "useralias": "0554654648", "lastname": "Belaid", "firstname": "Areski", "uipass": "6546456", "credit": "5", "tariff": "1"}' http://localhost:5000/api/card/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -276,7 +276,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST
 UPDATE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"lastname": "Belaid"}' http://localhost:5000/api/card/7/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X PUT --data '{"lastname": "Belaid"}' http://localhost:5000/api/card/7/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -353,6 +353,22 @@ Security
 Edit a2billing_flaskapi.py and change the secret key and keep this really secret:
 
     app.secret_key = 'ssshhhh-and-changeme-when-deploying'
+
+
+Admin Panel
+~~~~~~~~~~~
+
+An Admin Panel is provided which can be accessed at http://<ip_address>:5000/admin/
+
+You will need an admin username and password to login, see next section how to create an admin user.
+
+View resources
+
+.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin.png
+
+Edit resources
+
+.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin-Edit.png
 
 
 Create an Admin User

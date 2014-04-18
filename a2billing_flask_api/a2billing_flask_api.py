@@ -38,7 +38,7 @@ Usage API - Card Group
 GET ALL
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/cardgroup/
+$ curl -u username:password http://localhost:5000/api/cardgroup/
 
     {
       "meta": {
@@ -68,7 +68,7 @@ $ curl -u admin:admin http://localhost:5000/api/cardgroup/
 GET ONE
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
+$ curl -u username:password http://localhost:5000/api/cardgroup/1/
 
     {
       "id_agent": null,
@@ -81,7 +81,7 @@ $ curl -u admin:admin http://localhost:5000/api/cardgroup/1/
 DELETE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/cardgroup/4/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -96,7 +96,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELE
 ADD
 ~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X POST --data '{"name": "mygroup", "description": ""}' http://localhost:5000/api/cardgroup/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -115,7 +115,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST
 UPDATE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X PUT --data '{"name": "mygroup-updated", "description": ""}' http://localhost:5000/api/cardgroup/3/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -150,7 +150,7 @@ Usage API - Card
 GET ALL
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/card/
+$ curl -u username:password http://localhost:5000/api/card/
     {
       "meta": {
         "model": "card",
@@ -178,7 +178,7 @@ $ curl -u admin:admin http://localhost:5000/api/card/
 GET ONE
 ~~~~~~~
 
-$ curl -u admin:admin http://localhost:5000/api/card/1/
+$ curl -u username:password http://localhost:5000/api/card/1/
     {
       "email_notification": "areski@gmail.com",
       "status": 1,
@@ -203,7 +203,7 @@ $ curl -u admin:admin http://localhost:5000/api/card/1/
 DELETE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X DELETE http://localhost:5000/api/card/4/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -218,7 +218,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X DELE
 ADD
 ~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST --data '{"username": "1234567890", "useralias": "0554654648", "lastname": "Belaid", "firstname": "Areski", "uipass": "6546456", "credit": "5", "tariff": "1"}' http://localhost:5000/api/card/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X POST --data '{"username": "1234567890", "useralias": "0554654648", "lastname": "Belaid", "firstname": "Areski", "uipass": "6546456", "credit": "5", "tariff": "1"}' http://localhost:5000/api/card/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -252,7 +252,7 @@ $ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X POST
 UPDATE
 ~~~~~~
 
-$ curl -u admin:admin --dump-header - -H "Content-Type:application/json" -X PUT --data '{"lastname": "Belaid"}' http://localhost:5000/api/card/7/
+$ curl -u username:password --dump-header - -H "Content-Type:application/json" -X PUT --data '{"lastname": "Belaid"}' http://localhost:5000/api/card/7/
 
     HTTP/1.0 200 OK
     Content-Type: application/json
@@ -404,7 +404,7 @@ api.register(CardGroup, auth=user_auth)
 api.setup()
 
 
-admin = Admin(app, auth)
+admin = Admin(app, auth, branding='A2Billing API Admin Site')
 admin.register(Card, CardAdmin)
 admin.register(CardGroup, CardGroupAdmin)
 auth.register_admin(admin)
