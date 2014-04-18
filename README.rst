@@ -399,7 +399,7 @@ Conventions : http://www.python.org/dev/peps/pep-0008/
 Additional information
 -----------------------
 
-License : MIT
+License : MPL V2.0
 
 Fork the project on GitHub : https://github.com/areski/a2billing-flask-api
 

@@ -4,7 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright (C) 2011-2012 Star2Billing S.L.
+# Copyright (C) 2014 Star2Billing S.L.
 #
 # The Initial Developer of the Original Code is
 # Arezqui Belaid <info@star2billing.com>
@@ -57,3 +57,44 @@ func_identify_os() {
         ;;
     esac
 }
+
+
+#Function mysql db setting
+func_get_mysql_database_setting_asteriskcdrdb() {
+    if mysql -u$MYSQLUSER -p$MYSQLPASSWORD -P$MYHOSTPORT -h$MYHOST $DATABASENAME -e ";" ; then
+        #Database settings correct
+        echo "Mysql settings correct!"
+    else
+
+        echo ""
+        echo "Configure Mysql Settings to connect to the A2Billing Database..."
+        echo ""
+
+        echo "Enter Mysql hostname (default:localhost)"
+        read MYHOST
+        if [ -z "$MYHOST" ]; then
+            MYHOST="localhost"
+        fi
+        echo "Enter Mysql port (default:3306)"
+        read MYHOSTPORT
+        if [ -z "$MYHOSTPORT" ]; then
+            MYHOSTPORT="3306"
+        fi
+        echo "Enter Mysql Username (default:root)"
+        read MYSQLUSER
+        if [ -z "$MYSQLUSER" ]; then
+            MYSQLUSER="root"
+        fi
+        echo "Enter Mysql Password (default:password)"
+        read MYSQLPASSWORD
+        if [ -z "$MYSQLPASSWORD" ]; then
+            MYSQLPASSWORD="password"
+        fi
+        echo "Enter Database name (default:asteriskcdrdb)"
+        read DATABASENAME
+        if [ -z "$DATABASENAME" ]; then
+            DATABASENAME="asteriskcdrdb"
+        fi
+    fi
+}
+

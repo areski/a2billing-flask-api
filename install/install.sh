@@ -1,11 +1,10 @@
 #!/bin/bash
 #
-#
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright (C) 2011-2012 Star2Billing S.L.
+# Copyright (C) 2014 Star2Billing S.L.
 #
 # The Initial Developer is
 # Arezqui Belaid <info@star2billing.com>
@@ -17,11 +16,15 @@
 # cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install.sh -O install.sh ; bash install.sh
 #
 
+# TODO:
+1. Copy apache conf
+2
+
+
 
 INSTALL_MODE='CLONE'
-INSTALL_DIR='/usr/share/a2billing_flask_api'
+INSTALL_DIR='/usr/share/a2billing-flask-api'
 INSTALL_ENV="a2billing-flask-api"
-SRC_FREESWITCH='/usr/src/freeswitch/libs/esl'
 
 
 #Include general functions
@@ -74,11 +77,12 @@ func_install(){
     echo ""
 
     #python setup tools
-    echo "Install Dependencies and python modules..."
+    echo "Install Dependencies and Python modules..."
     case $DIST in
         'DEBIAN')
-            apt-get -y install python-setuptools python-dev build-essential libevent-dev git-core mercurial gawk
+            apt-get -y install python-setuptools python-dev build-essential git-core mercurial gawk
             easy_install pip
+            apt-get -y install libapache2-mod-wsgi
         ;;
         'CENTOS')
             if [ "$INSTALLMODE" = "FULL" ]; then
@@ -136,51 +140,22 @@ func_install(){
         pip install $line
     done
 
-    #Install FreeSWITCH Python ESL
-    cd $SRC_FREESWITCH
-    make pymod-install
-
     cd $INSTALL_DIR/
 
     #Fix permission on python-egg
     mkdir $INSTALL_DIR/.python-eggs
-
-
-    #add service for socketio server
-    # echo "Add service for a2billing-flask-api server..."
-    # cp /usr/src/a2billing-flask-api/install/init/a2billing-flask-api /etc/init.d/a2billing-flask-api
-    # chmod +x /etc/init.d/a2billing-flask-api
-    # chmod +x $INSTALL_DIR/a2billing_flask_api.py
-    # case $DIST in
-    #     'DEBIAN')
-    #         #Add Service
-    #         cd /etc/init.d; update-rc.d a2billing-flask-api defaults 99
-    #         /etc/init.d/a2billing-flask-api start
-    #     ;;
-    #     'CENTOS')
-    #         #Add Service
-    #         chkconfig --add a2billing-flask-api
-    #         chkconfig --level 2345 a2billing-flask-api on
-    #         /etc/init.d/a2billing-flask-api start
-    #     ;;
-    # esac
-
-    #Kill previous
-    ps auxw | grep gunicorn | awk '{print $2}' | xargs kill -9
 
     #Run Gunicorn and Flask
     /usr/share/virtualenvs/a2billing-flask-api/bin/python /usr/share/virtualenvs/a2billing-flask-api/bin/gunicorn a2billing_flask_api:app -c /usr/share/a2billing_flask_api/gunicorn.conf.py
 
 
     echo ""
+    echo "*************************************************************"
+    echo "Congratulations, A2Billing-Flask-API Server is now installed!"
+    echo "*************************************************************"
     echo ""
-    echo "********************************************************"
-    echo "Congratulations, a2billing-flask-api Server is now installed!"
-    echo "********************************************************"
-    echo ""
-    echo "The Star2Billing Team"
+    echo "The Star2Billing Team,"
     echo "http://www.star2billing.com"
-    echo ""
     echo ""
 }
 
