@@ -24,6 +24,10 @@ HTTP_PORT="8008"
 SECRET=`</dev/urandom tr -dc 0-9| (head -c $1 > /dev/null 2>&1 || head -c 5)`
 
 
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 #Include general functions
 wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/bash-common-functions.sh -O bash-common-functions.sh
 source bash-common-functions.sh
@@ -198,8 +202,11 @@ func_install() {
     #Fix permission on python-egg
     mkdir $INSTALL_DIR/.python-eggs
 
+    #Configure Logs files and logrotate
+    func_configure_http_server
+
     #Run Gunicorn and Flask
-    /usr/share/virtualenvs/a2billing-flask-api/bin/python /usr/share/virtualenvs/a2billing-flask-api/bin/gunicorn a2billing_flask_api:app -c /usr/share/a2billing_flask_api/gunicorn.conf.py
+    # /usr/share/virtualenvs/a2billing-flask-api/bin/python /usr/share/virtualenvs/a2billing-flask-api/bin/gunicorn a2billing_flask_api:app -c /usr/share/a2billing_flask_api/gunicorn.conf.py
 
     echo ""
     echo "*************************************************************"
