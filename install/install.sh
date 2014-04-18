@@ -16,6 +16,8 @@
 # cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install.sh -O install.sh ; bash install.sh
 #
 
+# TODO: Change the secret
+
 
 INSTALL_MODE='CLONE'
 INSTALL_DIR='/usr/share/a2billing-flask-api'
@@ -215,7 +217,7 @@ func_install() {
     esac
 
     # Copy files
-    cp -r /usr/src/a2billing-flask-api/a2billing_flask_api $INSTALL_DIR
+    cp -rf /usr/src/a2billing-flask-api/a2billing_flask_api $INSTALL_DIR
 
     #Install depencencies
     easy_install -U distribute
@@ -239,8 +241,26 @@ func_install() {
     echo "Congratulations, A2Billing-Flask-API Server is now installed!"
     echo "*************************************************************"
     echo ""
-    echo "The Star2Billing Team,"
-    echo "http://www.star2billing.com"
+    echo ""
+    echo "You should now edit /usr/share/a2billing-flask-api/a2billing_flask_api.py"
+    echo "and enter the right DB settings to connect to your A2Billing Database"
+    echo "See the file /etc/a2billing.conf"
+    echo ""
+    echo "Example of common settings:"
+    echo ""
+    echo "DATABASE = {"
+    echo "    'name': 'a2billing14',"
+    echo "    'engine': 'peewee.MySQLDatabase',"
+    echo "    'user': 'a2bdbuser',"
+    echo "    'passwd': 'a2bdbpassw',"
+    echo "}"
+    echo ""
+    echo "Restart Apache:"
+    echo "/etc/init.d/apache2 restart"
+    echo ""
+    echo "After this you will need to create a new admin user."
+    echo "To create a new admin user refer to the documentation of the project README.rst"
+    echo ""
     echo ""
 }
 

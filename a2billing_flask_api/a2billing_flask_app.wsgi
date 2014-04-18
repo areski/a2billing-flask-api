@@ -20,4 +20,4 @@ sys.path.append('/usr/share/a2billing-flask-api')
 # import django.core.handlers.wsgi
 # application = django.core.handlers.wsgi.WSGIHandler()
 
-from a2billing_flask_api.a2billing_flask_api import app as application
+from a2billing_flask_api import app as application

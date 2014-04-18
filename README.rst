@@ -378,14 +378,16 @@ Create an Admin User
 We now have a functioning admin site! Of course, we’ll need a user log in with,
 so open up an interactive python shell in the directory alongside the app and run the following:
 
-    from app import auth
+$ workon a2billing-flask-api
+$ cd /usr/share/a2billing-flask-api/
+$ python
 
+Then in Python interpreter, type the following:
+
+    from a2billing_flask_api import auth
     auth.User.create_table(fail_silently=True)  # make sure table created.
-
     admin = auth.User(username='admin', email='', admin=True, active=True)
-
     admin.set_password('admin')
-
     admin.save()
 
 
