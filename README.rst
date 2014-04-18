@@ -15,6 +15,23 @@ Also, you can filter results by columns on the model, for example:
     /api/cardgroup/?name=Some%20Blog
 
 
+Admin Panel
+~~~~~~~~~~~
+
+An Admin Panel is provided which can be accessed at http://<ip_address>:5000/admin/
+
+You will need an admin username and password to login, see section below on how to create an admin user.
+
+View resources
+
+.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin.png
+
+Edit resources
+
+.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin-Edit.png
+
+
+
 List of APIs
 ------------
 
@@ -353,22 +370,6 @@ Security
 Edit a2billing_flaskapi.py and change the secret key and keep this really secret:
 
     app.secret_key = 'ssshhhh-and-changeme-when-deploying'
-
-
-Admin Panel
-~~~~~~~~~~~
-
-An Admin Panel is provided which can be accessed at http://<ip_address>:5000/admin/
-
-You will need an admin username and password to login, see next section how to create an admin user.
-
-View resources
-
-.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin.png
-
-Edit resources
-
-.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin-Edit.png
 
 
 Create an Admin User
