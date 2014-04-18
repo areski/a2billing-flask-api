@@ -42,6 +42,9 @@ func_setup_virtualenv() {
     echo "This will install virtualenv & virtualenvwrapper"
     echo "and create a new virtualenv : $INSTALL_ENV"
 
+    echo "Press enter to continue"
+    read TEMP
+
     easy_install virtualenv
     easy_install virtualenvwrapper
 
@@ -61,7 +64,10 @@ func_setup_virtualenv() {
     workon $INSTALL_ENV
 
     echo "Virtualenv $INSTALL_ENV created and activated"
+
+    echo "Press enter to continue"
     read TEMP
+
 }
 
 
@@ -69,6 +75,10 @@ func_setup_virtualenv() {
 func_configure_http_server(){
     # prepare Apache
     echo "Prepare Apache configuration..."
+
+    echo "Press enter to continue"
+    read TEMP
+
     echo '
     '$WSGI_ADDITIONAL'
 
@@ -98,13 +108,23 @@ func_configure_http_server(){
     #correct the above file
     sed -i "s/@/'/g"  $APACHE_CONF_DIR/a2billing_flask_app.conf
 
-    #Restart HTTP Server
+    echo "Restart HTTP Server"
     service $APACHE_SERVICE restart
+
+    echo "Press enter to continue"
+    read TEMP
+
+
 }
 
 
 #Configure Logs files and logrotate
 func_prepare_logger() {
+    echo ""
+    echo "Prepare logger..."
+    echo "Press enter to continue"
+    read TEMP
+
     mkdir /var/log/a2billing-flask-api/
     touch /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
     touch /var/log/a2billing-flask-api/a2billing_flask_api.log
@@ -132,6 +152,9 @@ func_install() {
     echo "We will now install a2billing-flask-api on your server"
 	echo "======================================================"
     echo ""
+    echo "Press enter to continue"
+    read TEMP
+
     #python setup tools
     echo "Install Dependencies and Python modules..."
     echo ""
@@ -176,6 +199,9 @@ func_install() {
     func_setup_virtualenv
 
     echo "Install a2billing-flask-api..."
+    echo "Press enter to continue"
+    read TEMP
+
     cd /usr/src/
     rm -rf a2billing-flask-api
 
@@ -218,6 +244,6 @@ func_install() {
     echo ""
 }
 
+
 #run Install
 func_install
-
