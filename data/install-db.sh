@@ -15,15 +15,10 @@
 # cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/data/install-db.sh -O install-db.sh ; bash install-db.sh
 #
 
-sudo apt-get install mysql-server
 
-USER='root'
-PASSW='password'
-DBPASS='password'
-DBUSER='root'
-DBNAME='a2billing_db'
-HOSTNAME='localhost'
-MYSQL -u $USER -h -p$PASSW -Bse "CREATE DATABASE $DBNAME;"
-MYSQL -u $USER -h -p$PASSW -Bse "GRANT ALL ON $DBUSER.* to  $DBNAME identified by $DBPASS;"
+#Install A2billing DB
+apt-get install mysql-server
+/etc/init.d/mysql start
 
-cat a2billing_db.mysql| mysql --user=$USER --password=$PASSW --host=$HOSTNAME $DBNAME
+mysql -uroot -ppassword -e "CREATE DATABASE a2billing_db;"
+cat a2billing_db.mysql | mysql --user=root --password=password  a2billing_db
