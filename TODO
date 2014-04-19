@@ -6,6 +6,7 @@ TODO
 [X] 2. Build Restful API
 [X]    2.1. Build Documentation for Restful API
 [X] 3. Fake data
-[ ] 4. Deployment scripts
+[X] 4. Deployment scripts
+[ ]     4.1. Update secret key
 [X] 5. Documentation
 [X]    5.1. Add Screenshot to Documentation

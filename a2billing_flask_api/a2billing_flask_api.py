@@ -22,7 +22,7 @@ app.config.from_object(__name__)
 
 # Set the secret key.  keep this really secret
 # Default implementation stores all session data in a signed cookie. This requires that the secret_key is set
-app.secret_key = 'ssshhhh-and-changeme-when-deploying'
+app.secret_key = 'THE_SECRET_KEY'
 
 # Instantiate the db wrapper
 db = Database(app)

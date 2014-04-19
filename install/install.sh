@@ -16,15 +16,11 @@
 # cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install.sh -O install.sh ; bash install.sh
 #
 
-# TODO: Change the secret
-
 
 INSTALL_MODE='CLONE'
 INSTALL_DIR='/usr/share/a2billing-flask-api'
 INSTALL_ENV="a2billing-flask-api"
 HTTP_PORT="8008"
-SECRET=`</dev/urandom tr -dc 0-9| (head -c $1 > /dev/null 2>&1 || head -c 5)`
-
 
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -218,6 +214,11 @@ func_install() {
 
     # Copy files
     cp -rf /usr/src/a2billing-flask-api/a2billing_flask_api $INSTALL_DIR
+
+    # Update Secret key
+    echo "Update Secret Key..."
+    RANDPASSW=`</dev/urandom tr -dc A-Za-z0-9| (head -c $1 > /dev/null 2>&1 || head -c 50)`
+    sed -i "s/THE_SECRET_KEY/$RANDPASSW/g" /usr/share/a2billing-flask-api//usr/share/a2billing_flask_api.py
 
     #Install depencencies
     easy_install -U distribute
