@@ -85,7 +85,7 @@ func_configure_http_server(){
         ErrorLog /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
         LogLevel warn
 
-        #WSGIPassAuthorization On
+        WSGIPassAuthorization On
         WSGIDaemonProcess a2billing_flask_app user='$APACHE_USER' user='$APACHE_USER' threads=25
         WSGIProcessGroup a2billing_flask_app
         WSGIScriptAlias / '$INSTALL_DIR'/a2billing_flask_app.wsgi
@@ -122,7 +122,7 @@ func_prepare_logger() {
     mkdir /var/log/a2billing-flask-api/
     touch /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
     touch /var/log/a2billing-flask-api/a2billing_flask_api.log
-    chown -R $APACHE_USER:$APACHE_USER /var/log/cdr-stats
+    chown -R $APACHE_USER:$APACHE_USER /var/log/a2billing-flask-api
 
     rm /etc/logrotate.d/a2billing_flask_api
     touch /etc/logrotate.d/a2billing_flask_api

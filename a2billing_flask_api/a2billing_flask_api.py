@@ -412,6 +412,6 @@ if __name__ == '__main__':
     auth.User.create_table(fail_silently=True)
     # Note.create_table(fail_silently=True)
 
-    # app.debug = True
-    # app.run(host='0.0.0.0', port=PORT)
+    app.debug = True
+    app.run(host='0.0.0.0', port=8008)
     app.run()
