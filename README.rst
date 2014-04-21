@@ -4,13 +4,13 @@ A2Billing-Flask-API
 A2Billing Restful APIs in Flask.
 
 
-Each Rest Resource exposed via the API supports, the following:
+Each Rest Resource exposed via the API supports the following:
 
     /api/<model name>/ – GET and POST requests
 
     /api/<model name>/<primary key>/ – GET, PUT and DELETE requests
 
-Also, you can filter results by columns on the model, for example:
+Also, you can filter results by columns on the model. For example:
 
     /api/cardgroup/?name=Some%20Blog
 
@@ -20,7 +20,7 @@ Admin Panel
 
 An Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/
 
-You will need an admin username and password to login, see section below on how to create an admin user.
+You will need an admin username and password to login, see the section below on how to create an admin user.
 
 View resources
 
@@ -40,7 +40,7 @@ This is the list of Restful APIs supported.
 CardGroup - Method [GET/POST/PUT/DELETE]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Get list of card-group, create new card-group, Update/Delete existing card-group.
+Get list of card-groups, create new card-group, Update/Delete existing card-group.
 
 METHODS:
 
@@ -60,7 +60,7 @@ METHODS:
 Card - Method [GET/POST/PUT/DELETE]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Get list of card, create new card, Update/Delete existing card.
+Get list of cardss, create new card, Update/Delete existing card.
 
 METHODS:
 
@@ -80,7 +80,7 @@ METHODS:
 Usage API - Card Group
 ----------------------
 
-Card Group allow to regroup Card per entity and define agent associate to them as well as user permissions when accessing
+Card Group allows to regroup Card per entity and define agents associated to them, as well as user permissions when accessing
 the Customer UI.
 
 
@@ -184,7 +184,7 @@ $ curl -u username:password --dump-header - -H "Content-Type:application/json" -
 Usage API - Card
 ----------------
 
-Card are A2Billing User on the A2Billing Platform, this regroup credentials and specific information related to
+Cards are A2Billing Users on the A2Billing Platform, this regroups credentials and specific information related to
 the users, such as names, address, balance, etc..
 
 
@@ -357,7 +357,7 @@ Usage:
 Install & Deployment
 --------------------
 
-There is many ways to deploy a Flask Application, we will describe the Apache Method here as this is the ones
+There are many ways to deploy a Flask Application, we will describe the Apache Method here as this is the one
 more suitable for A2Billing users.
 
 
@@ -375,7 +375,7 @@ Edit a2billing_flaskapi.py and change the secret key and keep this really secret
 Create an Admin User
 ~~~~~~~~~~~~~~~~~~~~
 
-We now have a functioning admin site! Of course, we’ll need a user log in with,
+We now have a functioning admin site! Of course, we’ll need a user to log in with,
 so open up an interactive python shell in the directory alongside the app and run the following:
 
 $ workon a2billing-flask-api

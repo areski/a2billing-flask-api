@@ -3,8 +3,8 @@
 DEPLOY A2BILLING-FLASK-API
 ==========================
 
-There is many ways to deploy a Flask application, here we will focus on deploying on
-Apache2 webserver using mod_wsgi. This should be the most easier way for A2Billing
+There are many ways to deploy a Flask application, here we will focus on deploying on
+Apache2 webserver using mod_wsgi. This should be the easiest way for A2Billing
 users without installing too many applications on their server.
 
 
@@ -31,7 +31,7 @@ The a2billing_flask_app.wsgi is located at the root of this repository.
 Configuring Apache
 ------------------
 
-The last thing you have to do is to create an Apache configuration file for your application.
+The last thing to do is to create an Apache configuration file for your application.
 
     <VirtualHost *>
         ServerName example.com
