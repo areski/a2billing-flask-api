@@ -393,8 +393,7 @@ auth = Auth(app, db)
 user_auth = UserAuthentication(auth, protected_methods=['GET', 'POST', 'PUT', 'DELETE'])
 # create a RestAPI container
 api = RestAPI(app, default_auth=user_auth)
-
-# register the Note model
+# register the models
 api.register(Card, CardResource, auth=user_auth)
 api.register(CardGroup, auth=user_auth)
 # api.register(User, UserResource, auth=admin_auth)

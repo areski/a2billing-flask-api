@@ -3,7 +3,6 @@ A2Billing-Flask-API
 
 A2Billing Restful APIs in Flask.
 
-
 Each Rest Resource exposed via the API supports the following:
 
     /api/<model name>/ – GET and POST requests
