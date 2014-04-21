@@ -12,10 +12,8 @@
 
 #
 # To download and run the script on your server :
-#
 # cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install.sh -O install.sh ; bash install.sh
 #
-
 
 INSTALL_MODE='CLONE'
 INSTALL_DIR='/usr/share/a2billing-flask-api'
@@ -111,8 +109,6 @@ func_configure_http_server(){
 
     echo "Press enter to continue"
     read TEMP
-
-
 }
 
 
@@ -161,6 +157,7 @@ func_install() {
             apt-get -y install python-setuptools python-dev build-essential git-core mercurial gawk
             easy_install pip
             apt-get -y install libapache2-mod-python libapache2-mod-wsgi
+            apt-get -y install libmysqld-dev
         ;;
         'CENTOS')
             if [ "$INSTALLMODE" = "FULL" ]; then
