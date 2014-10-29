@@ -32,7 +32,6 @@ source bash-common-functions.sh
 func_identify_os
 
 
-
 #Fuction to create the virtual env
 func_setup_virtualenv() {
     echo "This will install virtualenv & virtualenvwrapper"
@@ -63,7 +62,6 @@ func_setup_virtualenv() {
 
     echo "Press enter to continue"
     read TEMP
-
 }
 
 
@@ -71,7 +69,6 @@ func_setup_virtualenv() {
 func_configure_http_server(){
     # prepare Apache
     echo "Prepare Apache configuration..."
-
     echo "Press enter to continue"
     read TEMP
 
@@ -150,7 +147,7 @@ func_install() {
     read TEMP
 
     #python setup tools
-    echo "Install Dependencies and Python modules..."
+    echo "Install dependencies and Python modules..."
     echo ""
     case $DIST in
         'DEBIAN')
@@ -262,6 +259,5 @@ func_install() {
     echo ""
 }
 
-
-#run Install
+#Run install
 func_install

@@ -12,6 +12,7 @@
 
 DATETIME=$(date +"%Y%m%d%H%M%S")
 KERNELARCH=$(uname -p)
+SCRIPT_NOTICE="This script is only intended to run on Ubuntu LTS 10.04 / 12.04 / 14.04 or CentOS 6.2"
 
 
 # Identify Linux Distribution type
@@ -19,19 +20,19 @@ func_identify_os() {
 
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
-        if [ "$(lsb_release -cs)" != "lucid" ] && [ "$(lsb_release -cs)" != "precise" ]; then
-		    echo "This script is only intended to run on Ubuntu LTS 10.04 / 12.04 or CentOS 6.2"
+        if [ "$(lsb_release -cs)" != "lucid" ] && [ "$(lsb_release -cs)" != "precise" ] && [ "$(lsb_release -cs)" != "wheezy" ]; then
+		    echo ""
 		    exit 255
 	    fi
     elif [ -f /etc/redhat-release ] ; then
         DIST='CENTOS'
         if [ "$(awk '{print $3}' /etc/redhat-release)" != "6.2" ] ; then
-        	echo "This script is only intended to run on Ubuntu LTS 10.04 / 12.04 or CentOS 6.2"
+        	echo $SCRIPT_NOTICE
         	exit 255
         fi
     else
         echo ""
-        echo "This script is only intended to run on Ubuntu LTS 10.04 / 12.04 or CentOS 6.2"
+        echo $SCRIPT_NOTICE
         echo ""
         exit 1
     fi
@@ -65,7 +66,6 @@ func_get_mysql_database_setting_asteriskcdrdb() {
         #Database settings correct
         echo "Mysql settings correct!"
     else
-
         echo ""
         echo "Configure Mysql Settings to connect to the A2Billing Database..."
         echo ""
@@ -97,4 +97,3 @@ func_get_mysql_database_setting_asteriskcdrdb() {
         fi
     fi
 }
-
