@@ -354,7 +354,7 @@ Stress Test
 
 Use ab, the Apache HTTP server benchmarking tool
 
-Usage:
+Usage::
 
     ab -c 100 -n 1000 -p test/post.txt -T application/x-www-form-urlencoded http://localhost:8008/api/cardgroup/
 
@@ -372,7 +372,7 @@ Reference: https://www.digitalocean.com/community/articles/how-to-deploy-a-flask
 Security
 ~~~~~~~~
 
-Edit a2billing_flaskapi.py and change the secret key and keep this really secret:
+Edit a2billing_flaskapi.py and change the secret key and keep this really secret::
 
     app.secret_key = 'ssshhhh-and-changeme-when-deploying'
 
@@ -381,11 +381,11 @@ Create an Admin User
 ~~~~~~~~~~~~~~~~~~~~
 
 We now have a functioning admin site! Of course, we’ll need a user to log in with,
-so open up an interactive python shell in the directory alongside the app and run the following:
+so open up an interactive python shell in the directory alongside the app and run the following::
 
-$ workon a2billing-flask-api
-$ cd /usr/share/a2billing-flask-api/
-$ python
+    $ workon a2billing-flask-api
+    $ cd /usr/share/a2billing-flask-api/
+    $ python
 
 Then in Python interpreter, type the following::
 
@@ -406,8 +406,8 @@ Conventions : http://www.python.org/dev/peps/pep-0008/
 Additional information
 -----------------------
 
-License : MPL V2.0
+License: MPL V2.0
 
-Fork the project on GitHub : https://github.com/areski/a2billing-flask-api
+Fork the project on GitHub: https://github.com/areski/a2billing-flask-api
 
 The initial Author is Arezqui Belaid <areski@gmail.com>
