@@ -38,9 +38,6 @@ func_setup_virtualenv() {
     echo "This will install virtualenv & virtualenvwrapper"
     echo "and create a new virtualenv : $INSTALL_ENV"
 
-    echo "Press enter to continue"
-    read TEMP
-
     easy_install virtualenv
     easy_install virtualenvwrapper
 
@@ -60,9 +57,7 @@ func_setup_virtualenv() {
     workon $INSTALL_ENV
 
     echo "Virtualenv $INSTALL_ENV created and activated"
-
-    echo "Press enter to continue"
-    read TEMP
+    echo ""
 }
 
 
@@ -103,8 +98,6 @@ func_nginx_supervisor(){
 func_prepare_logger() {
     echo ""
     echo "Prepare logger..."
-    echo "Press enter to continue"
-    read TEMP
 
     mkdir /var/log/a2billing-flask-api/
     touch /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
@@ -133,8 +126,6 @@ func_install() {
     echo "We will now install a2billing-flask-api on your server"
     echo "======================================================"
     echo ""
-    echo "Press enter to continue"
-    read TEMP
 
     #python setup tools
     echo "Install dependencies and Python modules..."
@@ -182,9 +173,6 @@ func_install() {
     func_setup_virtualenv
 
     echo "Install a2billing-flask-api..."
-    echo "Press enter to continue"
-    read TEMP
-
     cd /usr/src/
     rm -rf a2billing-flask-api
 
