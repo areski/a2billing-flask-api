@@ -387,7 +387,7 @@ $ workon a2billing-flask-api
 $ cd /usr/share/a2billing-flask-api/
 $ python
 
-Then in Python interpreter, type the following:
+Then in Python interpreter, type the following::
 
     from a2billing_flask_api import auth
     auth.User.create_table(fail_silently=True)  # make sure table created.

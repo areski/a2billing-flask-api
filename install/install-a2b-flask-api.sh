@@ -255,7 +255,11 @@ func_install() {
     echo "/etc/init.d/apache2 restart"
     echo ""
     echo "After this you will need to create a new admin user."
-    echo "To create a new admin user refer to the documentation of the project README.rst"
+    echo ""
+    echo "To create a new admin user refer to the README.rst:"
+    echo "https://github.com/areski/a2billing-flask-api/blob/master/README.rst#create-an-admin-user"
+    echo ""
+    echo "Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/"
     echo ""
     echo ""
 }

@@ -21,7 +21,6 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         if [ "$(lsb_release -cs)" != "lucid" ] && [ "$(lsb_release -cs)" != "precise" ] && [ "$(lsb_release -cs)" != "trusty" ]; then
-            echo $(lsb_release -cs)
             echo $SCRIPT_NOTICE
             exit 255
         fi
