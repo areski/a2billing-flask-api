@@ -66,47 +66,36 @@ func_setup_virtualenv() {
 }
 
 
-#Function to configure Apache
-func_configure_http_server(){
-    # prepare Apache
-    echo "Prepare Apache configuration..."
-    echo "Press enter to continue"
-    read TEMP
+#NGINX / SUPERVISOR
+func_nginx_supervisor(){
+    #Leave virtualenv
+    # deactivate
+    #Install Supervisor
+    # pip install supervisor
 
-    echo '
-    '$WSGI_ADDITIONAL'
+    #Nginx
+    cp /usr/src/a2billing-flask-api/install/nginx/a2billing_flask_app.conf /etc/nginx/sites-enabled/
 
-    Listen *:'$HTTP_PORT'
+    #Configure and Start supervisor
+    case $DIST in
+        'DEBIAN')
+            cp /usr/src/a2billing-flask-api/install/supervisor/supervisord_a2billing_flask_api.conf /etc/supervisor/conf.d/
+        ;;
+        'CENTOS')
+            #TODO: support CentOS
 
-    <VirtualHost *:'$HTTP_PORT'>
-        DocumentRoot '$INSTALL_DIR'/
-        ErrorLog /var/log/a2billing-flask-api/err-apache-a2billing_flask_api.log
-        LogLevel warn
-
-        WSGIPassAuthorization On
-        WSGIDaemonProcess a2billing_flask_app user='$APACHE_USER' user='$APACHE_USER' threads=25
-        WSGIProcessGroup a2billing_flask_app
-        WSGIScriptAlias / '$INSTALL_DIR'/a2billing_flask_app.wsgi
-
-        <Directory '$INSTALL_DIR'>
-            WSGIProcessGroup a2billing_flask_app
-            WSGIApplicationGroup %{GLOBAL}
-            AllowOverride all
-            Order deny,allow
-            Allow from all
-            '$WSGIApplicationGroup'
-        </Directory>
-
-    </VirtualHost>
-    ' > $APACHE_CONF_DIR/a2billing_flask_app.conf
-    #correct the above file
-    sed -i "s/@/'/g"  $APACHE_CONF_DIR/a2billing_flask_app.conf
-
-    echo "Restart HTTP Server"
-    service $APACHE_SERVICE restart
-
-    echo "Press enter to continue"
-    read TEMP
+            # cp /usr/src/a2billing-flask-api/install/supervisor/centos/supervisord /etc/init.d/supervisor
+            # chmod +x /etc/init.d/supervisor
+            # chkconfig --levels 235 supervisor on
+            # cp /usr/src/a2billing-flask-api/install/supervisor/centos/supervisord.conf /etc/supervisord.conf
+            # mkdir -p /etc/supervisor/conf.d
+            # cp /usr/src/a2billing-flask-api/install/supervisor/gunicorn_a2billing_flask_api.conf /etc/supervisor/conf.d/
+            # mkdir /var/log/supervisor/
+        ;;
+    esac
+    #Restart
+    /etc/init.d/supervisor stop; sleep 2; /etc/init.d/supervisor start
+    /etc/init.d/nginx restart
 }
 
 
@@ -156,6 +145,7 @@ func_install() {
             easy_install pip
             apt-get -y install libapache2-mod-python libapache2-mod-wsgi
             apt-get -y install libmysqld-dev
+            apt-get -y install nginx supervisor
         ;;
         'CENTOS')
             if [ "$INSTALLMODE" = "FULL" ]; then
@@ -226,11 +216,11 @@ func_install() {
     #Fix permission on python-egg
     mkdir $INSTALL_DIR/.python-eggs
 
-    #Configure Logs files and logrotate
-    func_configure_http_server
+    #Create admin user
+    python /usr/share/a2billing-flask-api/a2billing_flask_api.py
 
-    #Run Gunicorn and Flask
-    # /usr/share/virtualenvs/a2billing-flask-api/bin/python /usr/share/virtualenvs/a2billing-flask-api/bin/gunicorn a2billing_flask_api:app -c /usr/share/a2billing_flask_api/gunicorn.conf.py
+    #Configure Supervisor and Nginx
+    func_nginx_supervisor
 
     echo ""
     echo "*************************************************************"
@@ -254,12 +244,11 @@ func_install() {
     echo "Restart Apache:"
     echo "/etc/init.d/apache2 restart"
     echo ""
-    echo "After this you will need to create a new admin user."
+    echo "Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/"
+    echo "Now you can access the admin site and log-in with: admin / admin"
     echo ""
     echo "To create a new admin user refer to the README.rst:"
     echo "https://github.com/areski/a2billing-flask-api/blob/master/README.rst#create-an-admin-user"
-    echo ""
-    echo "Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/"
     echo ""
     echo ""
 }

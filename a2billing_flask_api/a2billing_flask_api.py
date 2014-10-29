@@ -28,6 +28,10 @@ app.secret_key = 'THE_SECRET_KEY'
 db = Database(app)
 
 
+@app.route('/')
+def homepage():
+    return 'Welcome to A2B Restful API!'
+
 """
 Usage API - Card Group
 ----------------------
@@ -386,6 +390,11 @@ class CardResource(RestResource):
 
         return True
 
+
+# create a special resource for users that excludes email and password
+class UserResource(RestResource):
+    exclude = ('password', 'email',)
+
 # create an Auth object for use with our flask app and database wrapper
 auth = Auth(app, db)
 
@@ -396,7 +405,7 @@ api = RestAPI(app, default_auth=user_auth)
 # register the models
 api.register(Card, CardResource, auth=user_auth)
 api.register(CardGroup, auth=user_auth)
-# api.register(User, UserResource, auth=admin_auth)
+api.register(auth.User, UserResource, auth=user_auth)
 api.setup()
 
 
@@ -410,6 +419,12 @@ admin.setup()
 if __name__ == '__main__':
     auth.User.create_table(fail_silently=True)
     # Note.create_table(fail_silently=True)
+    try:
+        admin = auth.User(username='admin', email='', admin=True, active=True)
+        admin.set_password('admin')
+        admin.save()
+    except IntegrityError:
+        print "User 'admin' already created!"
 
     app.debug = True
     app.run(host='0.0.0.0', port=8008)

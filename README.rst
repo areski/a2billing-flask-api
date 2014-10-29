@@ -380,11 +380,15 @@ Edit a2billing_flaskapi.py and change the secret key and keep this really secret
 Create an Admin User
 ~~~~~~~~~~~~~~~~~~~~
 
-We now have a functioning admin site! Of course, we’ll need a user to log in with,
-so open up an interactive python shell in the directory alongside the app and run the following::
+We now have a functioning admin site, you can login with user / password: admin / admin
 
-    $ workon a2billing-flask-api
+**Change immediately the default password by a strong password!!!**
+
+You might want to create an other admin user from shell, to do so open up an
+interactive python shell in the directory alongside the app and run the following::
+
     $ cd /usr/share/a2billing-flask-api/
+    $ workon a2billing-flask-api
     $ python
 
 Then in Python interpreter, type the following::
