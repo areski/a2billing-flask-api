@@ -12,7 +12,7 @@
 
 #
 # To download and run the script on your server :
-# cd /usr/src/ ; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install.sh -O install.sh ; bash install.sh
+# cd /usr/src/ ; rm install-a2b-flask-api.sh; rm bash-common-functions.sh; wget --no-check-certificate https://raw.github.com/areski/a2billing-flask-api/master/install/install-a2b-flask-api.sh -O install-a2b-flask-api.sh ; bash install-a2b-flask-api.sh
 #
 
 INSTALL_MODE='CLONE'
