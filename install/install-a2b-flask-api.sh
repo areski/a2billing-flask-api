@@ -142,7 +142,7 @@ func_prepare_logger() {
 func_install() {
     echo ""
     echo "We will now install a2billing-flask-api on your server"
-	echo "======================================================"
+    echo "======================================================"
     echo ""
     echo "Press enter to continue"
     read TEMP
@@ -164,23 +164,23 @@ func_install() {
             yum -y install autoconf automake bzip2 cpio curl curl-devel curl-devel expat-devel fileutils gcc-c++ gettext-devel gnutls-devel libjpeg-devel libogg-devel libtiff-devel libtool libvorbis-devel make ncurses-devel nmap openssl openssl-devel openssl-devel perl patch unzip wget zip zlib zlib-devel policycoreutils-python
 
             if [ ! -f /etc/yum.repos.d/rpmforge.repo ];
-            	then
-                	# Install RPMFORGE Repo
-        			if [ $KERNELARCH = "x86_64" ]; then
-						rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
-					else
-						rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.i686.rpm
-					fi
-        	fi
+                then
+                    # Install RPMFORGE Repo
+                    if [ $KERNELARCH = "x86_64" ]; then
+                        rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
+                    else
+                        rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.i686.rpm
+                    fi
+            fi
 
-        	yum -y --enablerepo=rpmforge install git-core
+            yum -y --enablerepo=rpmforge install git-core
 
             #Install epel repo for pip and mod_python
             if [ $KERNELARCH = "x86_64" ]; then
-				rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-7.noarch.rpm
-			else
-				rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm
-			fi
+                rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-7.noarch.rpm
+            else
+                rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm
+            fi
 
             # disable epel repository since by default it is enabled.
             sed -i "s/enabled=1/enable=0/" /etc/yum.repos.d/epel.repo

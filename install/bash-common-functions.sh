@@ -21,14 +21,15 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         if [ "$(lsb_release -cs)" != "lucid" ] && [ "$(lsb_release -cs)" != "precise" ] && [ "$(lsb_release -cs)" != "trusty" ]; then
-		    echo $SCRIPT_NOTICE
-		    exit 255
-	    fi
+            echo $(lsb_release -cs)
+            echo $SCRIPT_NOTICE
+            exit 255
+        fi
     elif [ -f /etc/redhat-release ] ; then
         DIST='CENTOS'
         if [ "$(awk '{print $3}' /etc/redhat-release)" != "6.2" ] ; then
-        	echo $SCRIPT_NOTICE
-        	exit 255
+            echo $SCRIPT_NOTICE
+            exit 255
         fi
     else
         echo $SCRIPT_NOTICE
