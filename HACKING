@@ -47,9 +47,7 @@ Human Alphabetical Order Examples
   import unittest
 
 
-
 Tool to make code PEP8 compliant
 --------------------------------
 - Install : https://github.com/cburroughs/pep8
 - Usage in your project directory : pep8 --statistics --filename=*.py --show-source --show-pep8 .
-

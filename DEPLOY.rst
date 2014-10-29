@@ -1,5 +1,4 @@
 
-
 DEPLOY A2BILLING-FLASK-API
 ==========================
 
@@ -46,9 +45,3 @@ The last thing to do is to create an Apache configuration file for your applicat
             Allow from all
         </Directory>
     </VirtualHost>
-
-
-
-
-
-

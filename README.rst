@@ -1,9 +1,15 @@
 A2Billing-Flask-API
 ===================
 
-A2Billing Restful APIs in Flask.
+Flexible & Fast Restful APIs framework for A2Billing powered by Flask_ & Peewee_.
+A2Billing-Flask-API comes with some tools for exposing your A2Billing
+models via a RESTful API.
 
-Each Rest Resource exposed via the API supports the following:
+.. _Flask: http://flask.pocoo.org/
+.. _Peewee: http://peewee.readthedocs.org/en/latest/
+
+
+Each RestFul APIs exposed supports the following:
 
     /api/<model name>/ – GET and POST requests
 
@@ -59,7 +65,7 @@ METHODS:
 Card - Method [GET/POST/PUT/DELETE]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Get list of cardss, create new card, Update/Delete existing card.
+Get list of cards, create new card, Update/Delete existing card.
 
 METHODS:
 
