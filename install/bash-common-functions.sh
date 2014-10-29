@@ -21,7 +21,7 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         if [ "$(lsb_release -cs)" != "lucid" ] && [ "$(lsb_release -cs)" != "precise" ] && [ "$(lsb_release -cs)" != "wheezy" ]; then
-		    echo ""
+		    echo $SCRIPT_NOTICE
 		    exit 255
 	    fi
     elif [ -f /etc/redhat-release ] ; then
@@ -31,9 +31,7 @@ func_identify_os() {
         	exit 255
         fi
     else
-        echo ""
         echo $SCRIPT_NOTICE
-        echo ""
         exit 1
     fi
 
