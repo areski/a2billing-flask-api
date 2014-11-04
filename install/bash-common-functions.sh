@@ -12,7 +12,7 @@
 
 DATETIME=$(date +"%Y%m%d%H%M%S")
 KERNELARCH=$(uname -p)
-SCRIPT_NOTICE="This script is only intended to run on Ubuntu LTS 10.04 / 12.04 / 14.04 or CentOS 6.2"
+SCRIPT_NOTICE="This script is only intended to run on Ubuntu 12.04 / 14.04"
 
 
 # Identify Linux Distribution type
@@ -24,12 +24,12 @@ func_identify_os() {
             echo $SCRIPT_NOTICE
             exit 255
         fi
-    elif [ -f /etc/redhat-release ] ; then
-        DIST='CENTOS'
-        if [ "$(awk '{print $3}' /etc/redhat-release)" != "6.2" ] ; then
-            echo $SCRIPT_NOTICE
-            exit 255
-        fi
+    # elif [ -f /etc/redhat-release ] ; then
+    #     DIST='CENTOS'
+    #     if [ "$(awk '{print $3}' /etc/redhat-release)" != "6.2" ] ; then
+    #         echo $SCRIPT_NOTICE
+    #         exit 255
+    #     fi
     else
         echo $SCRIPT_NOTICE
         exit 1
