@@ -1,0 +1,4 @@
+global-exclude *.pyc
+include README.rst
+include LICENSE
+recursive-include a2billing_flask_api *
