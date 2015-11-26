@@ -1,5 +1,5 @@
 #
-# SMS-Khomp-API License
+# A2Billing-Flask-API License
 # http://www.star2billing.com
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
@@ -19,20 +19,20 @@ import sys
 
 VERSION = '1.0'
 
-install_flag=False
+install_flag = False
 
 if sys.argv[1] == "install":
     install_flag = True
 
 setup(
-    name='sms-khomp-api',
+    name='a2billing-flask-api',
     version=VERSION.replace(' ', '-'),
     description='HTTP API for Khomp SMS',
     long_description=open('README.rst').read(),
     author='Belaid Arezqui',
     author_email='areski@gmail.com',
     url='http://www.cdr-stats.org/',
-    download_url='https://github.com/areski/sms-khomp-api',
+    download_url='https://github.com/areski/a2billing-flask-api',
     packages=find_packages(),
     include_package_data=True,
     license='MPL 2.0 License',

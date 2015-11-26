@@ -1,5 +1,12 @@
-A2Billing-Flask-API
-===================
+
+.. _getting_started:
+
+Getting Started
+===============
+
+:Source: https://github.com/areski/a2billing-flask-api/
+:Keywords: a2billing, api, flask
+
 
 Flexible & Fast Restful APIs framework for A2Billing powered by Flask_ & Peewee_.
 A2Billing-Flask-API comes with some tools for exposing your A2Billing
@@ -20,22 +27,26 @@ Also, you can filter results by columns on the model. For example:
     /api/cardgroup/?name=Some%20Blog
 
 
+.._admin-panel:
+
 Admin Panel
-~~~~~~~~~~~
+-----------
 
 An Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/
 
 You will need an admin username and password to login, see the section below on how to create an admin user.
 
-View resources
+View resources:
 
 .. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin.png
 
-Edit resources
+Edit resources:
 
 .. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin-Edit.png
 
 
+
+.. _requirements:
 
 Requirements
 ------------
@@ -57,6 +68,11 @@ This Application is build using Flask and Peewee:
     * Flask-HTTPAuth : https://pypi.python.org/pypi/Flask-HTTPAuth
 
 
+See the file requirements.txt for the full list of requirements.
+
+
+.. _stress-test:
+
 Stress Test
 -----------
 
@@ -66,6 +82,8 @@ Usage::
 
     ab -c 100 -n 1000 -p test/post.txt -T application/x-www-form-urlencoded http://localhost:8008/api/cardgroup/
 
+
+.. _install-deployment:
 
 Install & Deployment
 --------------------
@@ -77,16 +95,20 @@ more suitable for A2Billing users.
 Reference: https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 
 
+.. _security:
+
 Security
-~~~~~~~~
+--------
 
 Edit a2billing_flaskapi.py and change the secret key and keep this really secret::
 
     app.secret_key = 'ssshhhh-and-changeme-when-deploying'
 
 
+.. _create-an-admin-user:
+
 Create an Admin User
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 We now have a functioning admin site, you can login with user / password: admin / admin
 
@@ -106,20 +128,3 @@ Then in Python interpreter, type the following::
     admin = auth.User(username='admin', email='', admin=True, active=True)
     admin.set_password('admin')
     admin.save()
-
-
-Coding Conventions
-------------------
-
-This project is PEP8 compilant and please refer to these sources for the Coding
-Conventions : http://www.python.org/dev/peps/pep-0008/
-
-
-Additional information
------------------------
-
-License: MPL V2.0
-
-Fork the project on GitHub: https://github.com/areski/a2billing-flask-api
-
-The initial Author is Arezqui Belaid <areski@gmail.com>
