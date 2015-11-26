@@ -1,8 +1,8 @@
 
-.. _getting_started:
+.. _overview:
 
-Getting Started
-===============
+Overview
+========
 
 :Source: https://github.com/areski/a2billing-flask-api/
 :Keywords: a2billing, api, flask
@@ -27,23 +27,19 @@ Also, you can filter results by columns on the model. For example:
     /api/cardgroup/?name=Some%20Blog
 
 
-.._admin-panel:
+.._installation:
 
-Admin Panel
------------
+Installation
+------------
 
-An Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/
+An install shell script is provided at https://github.com/areski/a2billing-flask-api/tree/master/install
 
-You will need an admin username and password to login, see the section below on how to create an admin user.
+The install script is intended to run on Debian 8.
 
-View resources:
+Usage::
 
-.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin.png
-
-Edit resources:
-
-.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin-Edit.png
-
+    wget https://raw.githubusercontent.com/areski/a2billing-flask-api/master/install/install-a2b-flask-api.sh
+    bash install-a2b-flask-api.sh
 
 
 .. _requirements:
@@ -69,6 +65,24 @@ This Application is build using Flask and Peewee:
 
 
 See the file requirements.txt for the full list of requirements.
+
+
+.._admin-panel:
+
+Admin Panel
+-----------
+
+An Admin Panel is provided which can be accessed at http://<ip_address>:8008/admin/
+
+You will need an admin username and password to login, see the section below on how to create an admin user.
+
+View resources:
+
+.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin.png
+
+Edit resources:
+
+.. image:: https://github.com/areski/a2billing-flask-api/raw/master/screenshots/A2Billing-API-Admin-Edit.png
 
 
 .. _stress-test:
@@ -128,3 +142,36 @@ Then in Python interpreter, type the following::
     admin = auth.User(username='admin', email='', admin=True, active=True)
     admin.set_password('admin')
     admin.save()
+
+
+.. _documentation:
+
+Documentation
+-------------
+
+Check out the documentation on 'Read the Docs': http://a2billing-flask-api.readthedocs.org/en/latest/index.html
+
+
+.. _contributing:
+
+Contributing
+------------
+
+If you've found a bug, add a feature or improve the project and
+think it is useful then please consider contributing.
+Patches, pull requests or just suggestions are always welcome!
+
+Source code: https://github.com/areski/a2billing-flask-api/
+
+
+If you don’t like Github and Git you’re welcome to send regular patches.
+
+Bug tracker: https://github.com/areski/a2billing-flask-api//issues
+
+
+.. _license:
+
+License
+-------
+
+A2Billing-Flask-API is licensed under MPLv2.

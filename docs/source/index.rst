@@ -12,9 +12,10 @@ Contents:
 .. toctree::
     :maxdepth: 2
 
-    getting-started
+    overview
     api-list
     api-documentation
+    deploy
 
 
 
