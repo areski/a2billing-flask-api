@@ -1,7 +1,7 @@
 from flask_peewee.admin import Admin, ModelAdmin
 from app import app
 from auth import auth
-from models import CardGroup, Card, Callerid, Logrefill, Call, Country
+from models import CardGroup, Card, Callerid, Logrefill, Logpayment, Call, Country
 # from models import Did, DidDestination
 
 
@@ -18,6 +18,10 @@ class CalleridAdmin(ModelAdmin):
 
 
 class LogrefillAdmin(ModelAdmin):
+    columns = ('id', 'card', 'date', 'credit', 'refill_type',)
+
+
+class LogpaymentAdmin(ModelAdmin):
     columns = ('id', 'card', 'date', 'credit', 'refill_type',)
 
 
@@ -42,6 +46,7 @@ admin.register(Card, CardAdmin)
 admin.register(CardGroup, CardGroupAdmin)
 admin.register(Callerid, CalleridAdmin)
 admin.register(Logrefill, LogrefillAdmin)
+admin.register(Logpayment, LogpaymentAdmin)
 admin.register(Call, CallAdmin)
 admin.register(Country, CountryAdmin)
 # admin.register(Did, DidAdmin)
