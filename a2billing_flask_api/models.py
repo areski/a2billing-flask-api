@@ -209,7 +209,7 @@ class Call(db.Model):
     # id = BigIntegerField(primary_key=True)
     sessionid = CharField(default=0)
     uniqueid = CharField(null=False)
-    card = BigIntegerField(db_column='card_id')
+    card_id = BigIntegerField(null=False, db_column='card_id')
     nasipaddress = CharField(null=False)
     starttime = DateTimeField(index=True, default=datetime.datetime.now)
     stoptime = CharField(default="0000-00-00 00:00:00")

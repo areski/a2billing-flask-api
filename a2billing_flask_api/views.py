@@ -81,7 +81,6 @@ def refill(card_id):
         'credited': credit,
         'vat': card[0].vat,
         'logrefill_id': logrefill.id,
-        'logpayment_id': logpayment.id,
-        'status': 'OK'
+        'logpayment_id': logpayment.id
     }
     return jsonify(data)
