@@ -2,7 +2,7 @@ from flask_peewee.rest import RestAPI, UserAuthentication, RestResource
 from flask import request
 from auth import auth
 from app import app
-from models import CardGroup, Card, Callerid
+from models import CardGroup, Card, Callerid, Logrefill
 import json
 
 
@@ -31,6 +31,13 @@ class UserResource(RestResource):
     exclude = ('password', 'email',)
 
 
+# class LogrefillResource(RestResource):
+
+#     def prepare_data(self, obj, data):
+#         data["credit"] = str(data["credit"])
+#         return data
+
+
 # instantiate the user auth
 user_auth = UserAuthentication(auth, protected_methods=['GET', 'POST', 'PUT', 'DELETE'])
 
@@ -41,4 +48,5 @@ api = RestAPI(app, default_auth=user_auth)
 api.register(Card, CardResource, auth=user_auth)
 api.register(CardGroup, auth=user_auth)
 api.register(Callerid, auth=user_auth)
+api.register(Logrefill, auth=user_auth)
 api.register(auth.User, UserResource, auth=user_auth)

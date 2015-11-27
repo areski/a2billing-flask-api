@@ -102,7 +102,39 @@ class Callerid(db.Model):
         db_table = 'cc_callerid'
 
 
-class CcAgent(db.Model):
+class Logrefill(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    # card = ForeignKeyField(Card, db_column='card_id')
+    card = BigIntegerField(db_column='card_id', null=True)
+    date = DateTimeField(null=True)
+    agent = BigIntegerField(db_column='agent_id', null=True)
+    credit = DecimalField(default=0.0)
+    description = TextField(null=True)
+    # refill_type (amount:0, correction:1, extra fee:2,agent refund:3)
+    refill_type = IntegerField(default=0)
+    added_invoice = IntegerField(default=0)
+
+    class Meta:
+        db_table = 'cc_logrefill'
+
+
+class Logpayment(db.Model):
+    added_commission = IntegerField()
+    added_refill = IntegerField()
+    agent = BigIntegerField(db_column='agent_id', null=True)
+    card = BigIntegerField(db_column='card_id')
+    date = DateTimeField(null=True)
+    description = TextField(null=True)
+    id_logrefill = BigIntegerField(null=True)
+    payment = DecimalField(default=0.0)
+    # payment_type (amount:0, correction:1, extra fee:2,agent refund:3)
+    payment_type = IntegerField(default=0)
+
+    class Meta:
+        db_table = 'cc_logpayment'
+
+
+class Agent(db.Model):
     active = CharField()
     address = CharField(null=True)
     bank_info = TextField(null=True)
@@ -138,7 +170,7 @@ class CcAgent(db.Model):
         db_table = 'cc_agent'
 
 
-class CcAgentCommission(db.Model):
+class AgentCommission(db.Model):
     amount = DecimalField()
     commission_percent = DecimalField()
     commission_type = IntegerField()
@@ -153,7 +185,7 @@ class CcAgentCommission(db.Model):
         db_table = 'cc_agent_commission'
 
 
-class CcAgentSignup(db.Model):
+class AgentSignup(db.Model):
     code = CharField(unique=True)
     id = BigIntegerField(primary_key=True)
     id_agent = IntegerField()
@@ -164,7 +196,7 @@ class CcAgentSignup(db.Model):
         db_table = 'cc_agent_signup'
 
 
-class CcAgentTariffgroup(db.Model):
+class AgentTariffgroup(db.Model):
     id_agent = BigIntegerField()
     id_tariffgroup = IntegerField()
 
@@ -176,7 +208,7 @@ class CcAgentTariffgroup(db.Model):
         primary_key = CompositeKey('id_agent', 'id_tariffgroup')
 
 
-class CcAlarm(db.Model):
+class Alarm(db.Model):
     datecreate = DateTimeField()
     datelastrun = DateTimeField()
     emailreport = CharField(null=True)
@@ -195,7 +227,7 @@ class CcAlarm(db.Model):
         db_table = 'cc_alarm'
 
 
-class CcAlarmReport(db.Model):
+class AlarmReport(db.Model):
     calculatedvalue = FloatField()
     cc_alarm = BigIntegerField(db_column='cc_alarm_id')
     daterun = DateTimeField()
@@ -205,7 +237,7 @@ class CcAlarmReport(db.Model):
         db_table = 'cc_alarm_report'
 
 
-class CcAutorefillReport(db.Model):
+class AutorefillReport(db.Model):
     daterun = DateTimeField()
     id = BigIntegerField(primary_key=True)
     totalcardperform = IntegerField(null=True)
@@ -215,7 +247,7 @@ class CcAutorefillReport(db.Model):
         db_table = 'cc_autorefill_report'
 
 
-class CcBackup(db.Model):
+class Backup(db.Model):
     creationdate = DateTimeField()
     id = BigIntegerField(primary_key=True)
     name = CharField(unique=True)
@@ -225,7 +257,7 @@ class CcBackup(db.Model):
         db_table = 'cc_backup'
 
 
-class CcBillingCustomer(db.Model):
+class BillingCustomer(db.Model):
     date = DateTimeField()
     id = BigIntegerField(primary_key=True)
     id_card = BigIntegerField()
@@ -236,7 +268,7 @@ class CcBillingCustomer(db.Model):
         db_table = 'cc_billing_customer'
 
 
-class CcCall(db.Model):
+class Call(db.Model):
     buycost = DecimalField(null=True)
     calledstation = CharField(index=True)
     card = BigIntegerField(db_column='card_id')
@@ -265,7 +297,7 @@ class CcCall(db.Model):
         db_table = 'cc_call'
 
 
-class CcCallArchive(db.Model):
+class CallArchive(db.Model):
     buycost = DecimalField(null=True)
     calledstation = CharField(index=True)
     card = BigIntegerField(db_column='card_id')
@@ -294,7 +326,7 @@ class CcCallArchive(db.Model):
         db_table = 'cc_call_archive'
 
 
-class CcCallbackSpool(db.Model):
+class CallbackSpool(db.Model):
     account = CharField(null=True)
     actionid = CharField(null=True)
     agi_result = CharField(null=True)
@@ -324,7 +356,7 @@ class CcCallbackSpool(db.Model):
         db_table = 'cc_callback_spool'
 
 
-class CcCallplanLcr(db.Model):
+class CallplanLcr(db.Model):
     buyrate = DecimalField(null=True)
     connectcharge = DecimalField(null=True)
     destination = CharField(null=True)
@@ -343,7 +375,7 @@ class CcCallplanLcr(db.Model):
         db_table = 'cc_callplan_lcr'
 
 
-class CcCampaign(db.Model):
+class Campaign(db.Model):
     creationdate = DateTimeField()
     daily_start_time = TimeField()
     daily_stop_time = TimeField()
@@ -371,7 +403,7 @@ class CcCampaign(db.Model):
         db_table = 'cc_campaign'
 
 
-class CcCampaignConfig(db.Model):
+class CampaignConfig(db.Model):
     context = CharField()
     description = TextField(null=True)
     flatrate = DecimalField()
@@ -381,7 +413,7 @@ class CcCampaignConfig(db.Model):
         db_table = 'cc_campaign_config'
 
 
-class CcCampaignPhonebook(db.Model):
+class CampaignPhonebook(db.Model):
     id_campaign = IntegerField()
     id_phonebook = IntegerField()
 
@@ -393,7 +425,7 @@ class CcCampaignPhonebook(db.Model):
         primary_key = CompositeKey('id_campaign', 'id_phonebook')
 
 
-class CcCampaignPhonestatus(db.Model):
+class CampaignPhonestatus(db.Model):
     id_callback = CharField()
     id_campaign = IntegerField()
     id_phonenumber = BigIntegerField()
@@ -408,7 +440,7 @@ class CcCampaignPhonestatus(db.Model):
         primary_key = CompositeKey('id_campaign', 'id_phonenumber')
 
 
-class CcCampaignconfCardgroup(db.Model):
+class CampaignconfCardgroup(db.Model):
     id_campaign_config = IntegerField()
     id_card_group = IntegerField()
 
@@ -420,7 +452,7 @@ class CcCampaignconfCardgroup(db.Model):
         primary_key = CompositeKey('id_campaign_config', 'id_card_group')
 
 
-class CcCardArchive(db.Model):
+class CardArchive(db.Model):
     vat_rn = CharField(db_column='VAT_RN', null=True)
     activated = CharField()
     activatedbyuser = CharField()
@@ -490,7 +522,7 @@ class CcCardArchive(db.Model):
         db_table = 'cc_card_archive'
 
 
-class CcCardHistory(db.Model):
+class CardHistory(db.Model):
     datecreated = DateTimeField()
     description = TextField(null=True)
     id = BigIntegerField(primary_key=True)
@@ -500,7 +532,7 @@ class CcCardHistory(db.Model):
         db_table = 'cc_card_history'
 
 
-class CcCardPackageOffer(db.Model):
+class CardPackageOffer(db.Model):
     date_consumption = DateTimeField(index=True)
     id = BigIntegerField(primary_key=True)
     id_cc_card = BigIntegerField(index=True)
@@ -511,7 +543,7 @@ class CcCardPackageOffer(db.Model):
         db_table = 'cc_card_package_offer'
 
 
-class CcCardSeria(db.Model):
+class CardSeria(db.Model):
     description = TextField(null=True)
     name = CharField()
     value = BigIntegerField()
@@ -520,7 +552,7 @@ class CcCardSeria(db.Model):
         db_table = 'cc_card_seria'
 
 
-class CcCardSubscription(db.Model):
+class CardSubscription(db.Model):
     id = BigIntegerField(primary_key=True)
     id_cc_card = BigIntegerField(null=True)
     id_subscription_fee = IntegerField(null=True)
@@ -537,7 +569,7 @@ class CcCardSubscription(db.Model):
         db_table = 'cc_card_subscription'
 
 
-class CcCardgroupService(db.Model):
+class CardgroupService(db.Model):
     id_card_group = IntegerField()
     id_service = IntegerField()
 
@@ -549,7 +581,7 @@ class CcCardgroupService(db.Model):
         primary_key = CompositeKey('id_card_group', 'id_service')
 
 
-class CcCharge(db.Model):
+class Charge(db.Model):
     amount = FloatField()
     charged_status = IntegerField()
     chargetype = IntegerField(null=True)
@@ -568,7 +600,7 @@ class CcCharge(db.Model):
         db_table = 'cc_charge'
 
 
-class CcConfig(db.Model):
+class Config(db.Model):
     config_description = CharField(null=True)
     config_group_title = CharField()
     config_key = CharField(null=True)
@@ -581,7 +613,7 @@ class CcConfig(db.Model):
         db_table = 'cc_config'
 
 
-class CcConfigGroup(db.Model):
+class ConfigGroup(db.Model):
     group_description = CharField()
     group_title = CharField(unique=True)
 
@@ -589,7 +621,7 @@ class CcConfigGroup(db.Model):
         db_table = 'cc_config_group'
 
 
-class CcConfiguration(db.Model):
+class Configuration(db.Model):
     configuration_description = CharField()
     configuration = PrimaryKeyField(db_column='configuration_id')
     configuration_key = CharField()
@@ -603,7 +635,7 @@ class CcConfiguration(db.Model):
         db_table = 'cc_configuration'
 
 
-class CcCountry(db.Model):
+class Country(db.Model):
     countrycode = CharField()
     countryname = CharField()
     countryprefix = CharField()
@@ -613,7 +645,7 @@ class CcCountry(db.Model):
         db_table = 'cc_country'
 
 
-class CcCurrencies(db.Model):
+class Currencies(db.Model):
     basecurrency = CharField()
     currency = CharField(unique=True)
     lastupdate = DateTimeField()
@@ -624,7 +656,7 @@ class CcCurrencies(db.Model):
         db_table = 'cc_currencies'
 
 
-class CcDid(db.Model):
+class Did(db.Model):
     activated = IntegerField()
     aleg_carrier_connect_charge = DecimalField()
     aleg_carrier_connect_charge_offp = DecimalField()
@@ -664,7 +696,7 @@ class CcDid(db.Model):
         db_table = 'cc_did'
 
 
-class CcDidDestination(db.Model):
+class DidDestination(db.Model):
     activated = IntegerField()
     creationdate = DateTimeField()
     destination = CharField(null=True)
@@ -680,7 +712,7 @@ class CcDidDestination(db.Model):
         db_table = 'cc_did_destination'
 
 
-class CcDidUse(db.Model):
+class DidUse(db.Model):
     activated = IntegerField(null=True)
     id = BigIntegerField(primary_key=True)
     id_cc_card = BigIntegerField(null=True)
@@ -694,7 +726,7 @@ class CcDidUse(db.Model):
         db_table = 'cc_did_use'
 
 
-class CcDidgroup(db.Model):
+class Didgroup(db.Model):
     creationdate = DateTimeField()
     didgroupname = CharField()
     id = BigIntegerField(primary_key=True)
@@ -703,7 +735,7 @@ class CcDidgroup(db.Model):
         db_table = 'cc_didgroup'
 
 
-class CcEpaymentLog(db.Model):
+class EpaymentLog(db.Model):
     amount = CharField()
     cardid = BigIntegerField()
     cc_expires = CharField(null=True)
@@ -725,7 +757,7 @@ class CcEpaymentLog(db.Model):
         db_table = 'cc_epayment_log'
 
 
-class CcEpaymentLogAgent(db.Model):
+class EpaymentLogAgent(db.Model):
     agent = BigIntegerField(db_column='agent_id')
     amount = CharField()
     cc_expires = CharField(null=True)
@@ -745,7 +777,7 @@ class CcEpaymentLogAgent(db.Model):
         db_table = 'cc_epayment_log_agent'
 
 
-class CcIaxBuddies(db.Model):
+class IaxBuddies(db.Model):
     defaultip = CharField(db_column='DEFAULTip', null=True)
     accountcode = CharField()
     adsi = CharField()
@@ -806,7 +838,7 @@ class CcIaxBuddies(db.Model):
         )
 
 
-class CcInvoice(db.Model):
+class Invoice(db.Model):
     date = DateTimeField()
     description = TextField()
     id = BigIntegerField(primary_key=True)
@@ -820,7 +852,7 @@ class CcInvoice(db.Model):
         db_table = 'cc_invoice'
 
 
-class CcInvoiceConf(db.Model):
+class InvoiceConf(db.Model):
     key_val = CharField(unique=True)
     value = CharField()
 
@@ -828,7 +860,7 @@ class CcInvoiceConf(db.Model):
         db_table = 'cc_invoice_conf'
 
 
-class CcInvoiceItem(db.Model):
+class InvoiceItem(db.Model):
     vat = DecimalField(db_column='VAT')
     date = DateTimeField()
     description = TextField()
@@ -842,7 +874,7 @@ class CcInvoiceItem(db.Model):
         db_table = 'cc_invoice_item'
 
 
-class CcInvoicePayment(db.Model):
+class InvoicePayment(db.Model):
     id_invoice = BigIntegerField()
     id_payment = BigIntegerField()
 
@@ -854,7 +886,7 @@ class CcInvoicePayment(db.Model):
         primary_key = CompositeKey('id_invoice', 'id_payment')
 
 
-class CcIso639(db.Model):
+class Iso639(db.Model):
     charset = CharField()
     code = CharField(primary_key=True)
     lname = CharField(null=True)
@@ -864,22 +896,7 @@ class CcIso639(db.Model):
         db_table = 'cc_iso639'
 
 
-class CcLogpayment(db.Model):
-    added_commission = IntegerField()
-    added_refill = IntegerField()
-    agent = BigIntegerField(db_column='agent_id', null=True)
-    card = BigIntegerField(db_column='card_id')
-    date = DateTimeField()
-    description = TextField(null=True)
-    id_logrefill = BigIntegerField(null=True)
-    payment = DecimalField()
-    payment_type = IntegerField()
-
-    class Meta:
-        db_table = 'cc_logpayment'
-
-
-class CcLogpaymentAgent(db.Model):
+class LogpaymentAgent(db.Model):
     added_refill = IntegerField()
     agent = BigIntegerField(db_column='agent_id')
     date = DateTimeField()
@@ -893,21 +910,7 @@ class CcLogpaymentAgent(db.Model):
         db_table = 'cc_logpayment_agent'
 
 
-class CcLogrefill(db.Model):
-    added_invoice = IntegerField()
-    agent = BigIntegerField(db_column='agent_id', null=True)
-    card = BigIntegerField(db_column='card_id')
-    credit = DecimalField()
-    date = DateTimeField()
-    description = TextField(null=True)
-    id = BigIntegerField(primary_key=True)
-    refill_type = IntegerField()
-
-    class Meta:
-        db_table = 'cc_logrefill'
-
-
-class CcLogrefillAgent(db.Model):
+class LogrefillAgent(db.Model):
     agent = BigIntegerField(db_column='agent_id')
     credit = DecimalField()
     date = DateTimeField()
@@ -919,7 +922,7 @@ class CcLogrefillAgent(db.Model):
         db_table = 'cc_logrefill_agent'
 
 
-class CcMessageAgent(db.Model):
+class MessageAgent(db.Model):
     id = BigIntegerField(primary_key=True)
     id_agent = IntegerField()
     logo = IntegerField()
@@ -931,7 +934,7 @@ class CcMessageAgent(db.Model):
         db_table = 'cc_message_agent'
 
 
-class CcMonitor(db.Model):
+class Monitor(db.Model):
     description = CharField(null=True)
     dial_code = IntegerField(null=True)
     enable = IntegerField()
@@ -946,7 +949,7 @@ class CcMonitor(db.Model):
         db_table = 'cc_monitor'
 
 
-class CcNotification(db.Model):
+class Notification(db.Model):
     date = DateTimeField()
     from_ = BigIntegerField(db_column='from_id', null=True)
     from_type = IntegerField()
@@ -960,7 +963,7 @@ class CcNotification(db.Model):
         db_table = 'cc_notification'
 
 
-class CcNotificationAdmin(db.Model):
+class NotificationAdmin(db.Model):
     id_admin = IntegerField()
     id_notification = BigIntegerField()
     viewed = IntegerField()
@@ -973,7 +976,7 @@ class CcNotificationAdmin(db.Model):
         primary_key = CompositeKey('id_admin', 'id_notification')
 
 
-class CcOutboundCidGroup(db.Model):
+class OutboundCidGroup(db.Model):
     creationdate = DateTimeField()
     group_name = CharField()
 
@@ -981,7 +984,7 @@ class CcOutboundCidGroup(db.Model):
         db_table = 'cc_outbound_cid_group'
 
 
-class CcOutboundCidList(db.Model):
+class OutboundCidList(db.Model):
     activated = IntegerField()
     cid = CharField(null=True)
     creationdate = DateTimeField()
@@ -991,7 +994,7 @@ class CcOutboundCidList(db.Model):
         db_table = 'cc_outbound_cid_list'
 
 
-class CcPackageGroup(db.Model):
+class PackageGroup(db.Model):
     description = TextField(null=True)
     name = CharField()
 
@@ -999,7 +1002,7 @@ class CcPackageGroup(db.Model):
         db_table = 'cc_package_group'
 
 
-class CcPackageOffer(db.Model):
+class PackageOffer(db.Model):
     billingtype = IntegerField()
     creationdate = DateTimeField()
     freetimetocall = IntegerField()
@@ -1012,7 +1015,7 @@ class CcPackageOffer(db.Model):
         db_table = 'cc_package_offer'
 
 
-class CcPackageRate(db.Model):
+class PackageRate(db.Model):
     package = IntegerField(db_column='package_id')
     rate = IntegerField(db_column='rate_id')
 
@@ -1024,7 +1027,7 @@ class CcPackageRate(db.Model):
         primary_key = CompositeKey('package', 'rate')
 
 
-class CcPackgroupPackage(db.Model):
+class PackgroupPackage(db.Model):
     package = IntegerField(db_column='package_id')
     packagegroup = IntegerField(db_column='packagegroup_id')
 
@@ -1036,7 +1039,7 @@ class CcPackgroupPackage(db.Model):
         primary_key = CompositeKey('package', 'packagegroup')
 
 
-class CcPaymentMethods(db.Model):
+class PaymentMethods(db.Model):
     payment_filename = CharField()
     payment_method = CharField()
 
@@ -1044,7 +1047,7 @@ class CcPaymentMethods(db.Model):
         db_table = 'cc_payment_methods'
 
 
-class CcPayments(db.Model):
+class Payments(db.Model):
     cc_expires = CharField(null=True)
     cc_number = CharField(null=True)
     cc_owner = CharField(null=True)
@@ -1069,7 +1072,7 @@ class CcPayments(db.Model):
         db_table = 'cc_payments'
 
 
-class CcPaymentsAgent(db.Model):
+class PaymentsAgent(db.Model):
     agent_email_address = CharField()
     agent = BigIntegerField(db_column='agent_id')
     agent_name = CharField()
@@ -1094,7 +1097,7 @@ class CcPaymentsAgent(db.Model):
         db_table = 'cc_payments_agent'
 
 
-class CcPaymentsStatus(db.Model):
+class PaymentsStatus(db.Model):
     status = IntegerField(db_column='status_id')
     status_name = CharField()
 
@@ -1102,7 +1105,7 @@ class CcPaymentsStatus(db.Model):
         db_table = 'cc_payments_status'
 
 
-class CcPaypal(db.Model):
+class Paypal(db.Model):
     address_city = CharField()
     address_country = CharField()
     address_name = CharField()
@@ -1136,7 +1139,7 @@ class CcPaypal(db.Model):
         db_table = 'cc_paypal'
 
 
-class CcPhonebook(db.Model):
+class Phonebook(db.Model):
     description = TextField(null=True)
     id_card = BigIntegerField()
     name = CharField()
@@ -1145,7 +1148,7 @@ class CcPhonebook(db.Model):
         db_table = 'cc_phonebook'
 
 
-class CcPhonenumber(db.Model):
+class Phonenumber(db.Model):
     amount = IntegerField()
     creationdate = DateTimeField()
     id = BigIntegerField(primary_key=True)
@@ -1159,7 +1162,7 @@ class CcPhonenumber(db.Model):
         db_table = 'cc_phonenumber'
 
 
-class CcPrefix(db.Model):
+class Prefix(db.Model):
     destination = CharField(index=True)
     prefix = BigIntegerField(primary_key=True)
 
@@ -1167,7 +1170,7 @@ class CcPrefix(db.Model):
         db_table = 'cc_prefix'
 
 
-class CcProvider(db.Model):
+class Provider(db.Model):
     creationdate = DateTimeField()
     description = TextField(null=True)
     provider_name = CharField(unique=True)
@@ -1176,7 +1179,7 @@ class CcProvider(db.Model):
         db_table = 'cc_provider'
 
 
-class CcRatecard(db.Model):
+class Ratecard(db.Model):
     additional_block_charge = DecimalField()
     additional_block_charge_time = IntegerField()
     additional_grace = IntegerField()
@@ -1222,7 +1225,7 @@ class CcRatecard(db.Model):
         db_table = 'cc_ratecard'
 
 
-class CcReceipt(db.Model):
+class Receipt(db.Model):
     date = DateTimeField()
     description = TextField()
     id = BigIntegerField(primary_key=True)
@@ -1234,7 +1237,7 @@ class CcReceipt(db.Model):
         db_table = 'cc_receipt'
 
 
-class CcReceiptItem(db.Model):
+class ReceiptItem(db.Model):
     date = DateTimeField()
     description = TextField()
     id = BigIntegerField(primary_key=True)
@@ -1247,7 +1250,7 @@ class CcReceiptItem(db.Model):
         db_table = 'cc_receipt_item'
 
 
-class CcRemittanceRequest(db.Model):
+class RemittanceRequest(db.Model):
     amount = DecimalField()
     date = DateTimeField()
     id = BigIntegerField(primary_key=True)
@@ -1259,7 +1262,7 @@ class CcRemittanceRequest(db.Model):
         db_table = 'cc_remittance_request'
 
 
-class CcRestrictedPhonenumber(db.Model):
+class RestrictedPhonenumber(db.Model):
     id = BigIntegerField(primary_key=True)
     id_card = BigIntegerField()
     number = CharField()
@@ -1268,7 +1271,7 @@ class CcRestrictedPhonenumber(db.Model):
         db_table = 'cc_restricted_phonenumber'
 
 
-class CcServerGroup(db.Model):
+class ServerGroup(db.Model):
     description = TextField(null=True)
     id = BigIntegerField(primary_key=True)
     name = CharField(null=True)
@@ -1277,7 +1280,7 @@ class CcServerGroup(db.Model):
         db_table = 'cc_server_group'
 
 
-class CcServerManager(db.Model):
+class ServerManager(db.Model):
     id = BigIntegerField(primary_key=True)
     id_group = IntegerField(null=True)
     lasttime_used = DateTimeField()
@@ -1290,7 +1293,7 @@ class CcServerManager(db.Model):
         db_table = 'cc_server_manager'
 
 
-class CcService(db.Model):
+class Service(db.Model):
     amount = FloatField()
     datecreate = DateTimeField()
     datelastrun = DateTimeField()
@@ -1314,7 +1317,7 @@ class CcService(db.Model):
         db_table = 'cc_service'
 
 
-class CcServiceReport(db.Model):
+class ServiceReport(db.Model):
     cc_service = BigIntegerField(db_column='cc_service_id')
     daterun = DateTimeField()
     id = BigIntegerField(primary_key=True)
@@ -1325,7 +1328,7 @@ class CcServiceReport(db.Model):
         db_table = 'cc_service_report'
 
 
-class CcSipBuddies(db.Model):
+class SipBuddies(db.Model):
     defaultip = CharField(db_column='DEFAULTip', null=True)
     accountcode = CharField()
     allow = CharField()
@@ -1394,7 +1397,7 @@ class CcSipBuddies(db.Model):
         )
 
 
-class CcSipBuddiesEmpty(db.Model):
+class SipBuddiesEmpty(db.Model):
     defaultip = CharField(db_column='DEFAULTip', null=True)
     accountcode = CharField()
     allow = CharField()
@@ -1440,7 +1443,7 @@ class CcSipBuddiesEmpty(db.Model):
         db_table = 'cc_sip_buddies_empty'
 
 
-class CcSpeeddial(db.Model):
+class Speeddial(db.Model):
     creationdate = DateTimeField()
     id = BigIntegerField(primary_key=True)
     id_cc_card = BigIntegerField()
@@ -1455,7 +1458,7 @@ class CcSpeeddial(db.Model):
         )
 
 
-class CcStatusLog(db.Model):
+class StatusLog(db.Model):
     id = BigIntegerField(primary_key=True)
     id_cc_card = BigIntegerField()
     status = IntegerField()
@@ -1465,7 +1468,7 @@ class CcStatusLog(db.Model):
         db_table = 'cc_status_log'
 
 
-class CcSubscriptionService(db.Model):
+class SubscriptionService(db.Model):
     datecreate = DateTimeField()
     datelastrun = DateTimeField()
     emailreport = CharField()
@@ -1483,7 +1486,7 @@ class CcSubscriptionService(db.Model):
         db_table = 'cc_subscription_service'
 
 
-class CcSubscriptionSignup(db.Model):
+class SubscriptionSignup(db.Model):
     description = CharField(null=True)
     enable = IntegerField()
     id = BigIntegerField(primary_key=True)
@@ -1495,7 +1498,7 @@ class CcSubscriptionSignup(db.Model):
         db_table = 'cc_subscription_signup'
 
 
-class CcSupport(db.Model):
+class Support(db.Model):
     email = CharField(null=True)
     language = CharField()
     name = CharField()
@@ -1504,7 +1507,7 @@ class CcSupport(db.Model):
         db_table = 'cc_support'
 
 
-class CcSupportComponent(db.Model):
+class SupportComponent(db.Model):
     activated = IntegerField()
     id_support = IntegerField()
     name = CharField()
@@ -1514,7 +1517,7 @@ class CcSupportComponent(db.Model):
         db_table = 'cc_support_component'
 
 
-class CcSystemLog(db.Model):
+class SystemLog(db.Model):
     action = TextField()
     agent = IntegerField(null=True)
     creationdate = DateTimeField()
@@ -1530,7 +1533,7 @@ class CcSystemLog(db.Model):
         db_table = 'cc_system_log'
 
 
-class CcTariffgroup(db.Model):
+class Tariffgroup(db.Model):
     creationdate = DateTimeField()
     id_cc_package_offer = BigIntegerField()
     idtariffplan = IntegerField()
@@ -1543,7 +1546,7 @@ class CcTariffgroup(db.Model):
         db_table = 'cc_tariffgroup'
 
 
-class CcTariffgroupPlan(db.Model):
+class TariffgroupPlan(db.Model):
     idtariffgroup = IntegerField()
     idtariffplan = IntegerField()
 
@@ -1555,7 +1558,7 @@ class CcTariffgroupPlan(db.Model):
         primary_key = CompositeKey('idtariffgroup', 'idtariffplan')
 
 
-class CcTariffplan(db.Model):
+class Tariffplan(db.Model):
     calleridprefix = CharField()
     creationdate = DateTimeField()
     description = TextField(null=True)
@@ -1578,7 +1581,7 @@ class CcTariffplan(db.Model):
         )
 
 
-class CcTemplatemail(db.Model):
+class Templatemail(db.Model):
     fromemail = CharField(null=True)
     fromname = CharField(null=True)
     id_language = CharField()
@@ -1594,7 +1597,7 @@ class CcTemplatemail(db.Model):
         )
 
 
-class CcTicket(db.Model):
+class Ticket(db.Model):
     creationdate = DateTimeField()
     creator = BigIntegerField()
     creator_type = IntegerField()
@@ -1612,7 +1615,7 @@ class CcTicket(db.Model):
         db_table = 'cc_ticket'
 
 
-class CcTicketComment(db.Model):
+class TicketComment(db.Model):
     creator = BigIntegerField()
     creator_type = IntegerField()
     date = DateTimeField()
@@ -1627,7 +1630,7 @@ class CcTicketComment(db.Model):
         db_table = 'cc_ticket_comment'
 
 
-class CcTimezone(db.Model):
+class Timezone(db.Model):
     gmtoffset = BigIntegerField()
     gmttime = CharField(null=True)
     gmtzone = CharField(null=True)
@@ -1636,7 +1639,7 @@ class CcTimezone(db.Model):
         db_table = 'cc_timezone'
 
 
-class CcTrunk(db.Model):
+class Trunk(db.Model):
     addparameter = CharField(null=True)
     creationdate = DateTimeField()
     failover_trunk = IntegerField(null=True)
@@ -1659,7 +1662,7 @@ class CcTrunk(db.Model):
         db_table = 'cc_trunk'
 
 
-class CcUiAuthen(db.Model):
+class UiAuthen(db.Model):
     city = CharField(null=True)
     confaddcust = IntegerField(null=True)
     country = CharField(null=True)
@@ -1681,14 +1684,14 @@ class CcUiAuthen(db.Model):
         db_table = 'cc_ui_authen'
 
 
-class CcVersion(db.Model):
+class Version(db.Model):
     version = CharField()
 
     class Meta:
         db_table = 'cc_version'
 
 
-class CcVoucher(db.Model):
+class Voucher(db.Model):
     activated = CharField()
     creationdate = DateTimeField()
     credit = FloatField()
