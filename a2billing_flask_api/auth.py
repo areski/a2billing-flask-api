@@ -1,7 +1,6 @@
 from flask_peewee.auth import Auth
-
 from app import app, db
-from models import User
 
 
-auth = Auth(app, db, user_model=User)
+# create an Auth object for use with our flask app and database wrapper
+auth = Auth(app, db)
