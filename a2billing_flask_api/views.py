@@ -4,7 +4,7 @@ from flask import jsonify
 from peewee import *
 from functools import wraps
 from flask import g, request, redirect, url_for, Response
-from models import Card, Logrefill, Logpayment
+from models import Card, Logrefill, Logpayment, Charge
 import datetime
 
 
@@ -36,19 +36,13 @@ def homepage():
 @app.route('/private/')
 @auth.login_required
 def private_view():
-    # user = auth.get_logged_in_user()
     return 'This is private!'
 
 
-# user_auth = UserAuthentication(auth, protected_methods=['GET', 'POST', 'PUT', 'DELETE'])
-
-
-# @user_auth.auth.login_required
 @app.route('/custom_api/refill/<int:card_id>', methods=['POST'])
 @custom_login_required
 def refill(card_id):
     if not request.json or 'credit' not in request.json:
-        # abort(400, {'errors': dict(password="Missing credit parameter.")})
         return Response('Missing credit parameter.', 400)
 
     # Get Card(vat, credit)
@@ -82,5 +76,35 @@ def refill(card_id):
         'vat': card[0].vat,
         'logrefill_id': logrefill.id,
         'logpayment_id': logpayment.id
+    }
+    return jsonify(data)
+
+
+@app.route('/custom_api/extra_charge/<int:card_id>', methods=['POST'])
+@custom_login_required
+def extra_charge(card_id):
+    if not request.json or 'amount' not in request.json:
+        return Response('Missing amount parameter.', 400)
+
+    # Get Card
+    card = Card.select(Card.credit).where(Card.id == card_id)
+    if not card and not card[0]:
+        return Response('Card not found.', 400)
+
+    amount = float(request.json['amount'])
+    prev_credit = card[0].credit
+    new_balance = prev_credit - amount
+    Card.update(credit=new_balance).where(Card.id == card_id).execute()
+
+    # add charge
+    charge = Charge(id_cc_card=card_id, amount=amount, chargetype=4)
+    charge.save()
+
+    # prepare dictionary for JSON return
+    data = {
+        'card_id': card_id,
+        'current_balance': new_balance,
+        'amount': amount,
+        'charge_id': charge.id
     }
     return jsonify(data)

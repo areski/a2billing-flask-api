@@ -2,7 +2,7 @@ from flask_peewee.rest import RestAPI, UserAuthentication, RestResource
 from flask import request
 from auth import auth
 from app import app
-from models import CardGroup, Card, Callerid, Logrefill, Logpayment, Call, Country
+from models import CardGroup, Card, Callerid, Logrefill, Logpayment, Call, Country, Charge
 # from models import Did, DidDestination
 import json
 
@@ -53,6 +53,7 @@ api.register(Logrefill, auth=user_auth)
 api.register(Logpayment, auth=user_auth)
 api.register(Call, auth=user_auth)
 api.register(Country, auth=user_auth)
+api.register(Charge, auth=user_auth)
 # api.register(Did, auth=user_auth)
 # api.register(DidDestination, auth=user_auth)
 api.register(auth.User, UserResource, auth=user_auth)

@@ -1,7 +1,7 @@
 from flask_peewee.admin import Admin, ModelAdmin
 from app import app
 from auth import auth
-from models import CardGroup, Card, Callerid, Logrefill, Logpayment, Call, Country
+from models import CardGroup, Card, Callerid, Logrefill, Logpayment, Call, Country, Charge
 # from models import Did, DidDestination
 
 
@@ -33,6 +33,10 @@ class CountryAdmin(ModelAdmin):
     columns = ('id', 'countrycode', 'countryname')
 
 
+class ChargeAdmin(ModelAdmin):
+    columns = ('id', 'id_cc_card', 'creationdate', 'amount', 'chargetype')
+
+
 class DidAdmin(ModelAdmin):
     columns = ('id', 'did', 'iduser', 'activated', 'reserved')
 
@@ -49,6 +53,7 @@ admin.register(Logrefill, LogrefillAdmin)
 admin.register(Logpayment, LogpaymentAdmin)
 admin.register(Call, CallAdmin)
 admin.register(Country, CountryAdmin)
+admin.register(Charge, ChargeAdmin)
 # admin.register(Did, DidAdmin)
 # admin.register(DidDestination, DidDestinationAdmin)
 auth.register_admin(admin)

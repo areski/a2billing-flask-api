@@ -234,9 +234,31 @@ class Call(db.Model):
         db_table = 'cc_call'
 
 
+class Charge(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    amount = FloatField(default=0)
+    charged_status = IntegerField(default=0)
+    # Values: 1:charge DID setup, 2:Montly charge for DID use, 3:Subscription fee, 4:Extra Charge
+    chargetype = IntegerField(null=True, default=4)
+    cover_from = DateField(null=True)
+    cover_to = DateField(null=True)
+    creationdate = DateTimeField(index=True, default=datetime.datetime.now)
+    description = TextField(null=True)
+    id_cc_card = ForeignKeyField(Card, db_column='id_cc_card')
+    id_cc_card_subscription = BigIntegerField(null=True)
+    # id_cc_did = BigIntegerField(null=True)
+    id_cc_did = ForeignKeyField(Did, db_column='id_cc_did', default=0)
+    iduser = IntegerField(default=0)
+    invoiced_status = IntegerField(default=0)
+
+    class Meta:
+        db_table = 'cc_charge'
+
+
 #
 # Previous Models are currently used
 #
+
 
 class Agent(db.Model):
     active = CharField()
@@ -654,25 +676,6 @@ class CardgroupService(db.Model):
             (('id_card_group', 'id_service'), True),
         )
         primary_key = CompositeKey('id_card_group', 'id_service')
-
-
-class Charge(db.Model):
-    amount = FloatField()
-    charged_status = IntegerField()
-    chargetype = IntegerField(null=True)
-    cover_from = DateField(null=True)
-    cover_to = DateField(null=True)
-    creationdate = DateTimeField(index=True)
-    description = TextField(null=True)
-    id = BigIntegerField(primary_key=True)
-    id_cc_card = BigIntegerField(index=True)
-    id_cc_card_subscription = BigIntegerField(null=True)
-    id_cc_did = BigIntegerField(null=True)
-    iduser = IntegerField()
-    invoiced_status = IntegerField()
-
-    class Meta:
-        db_table = 'cc_charge'
 
 
 class Config(db.Model):
