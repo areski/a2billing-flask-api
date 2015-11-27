@@ -91,6 +91,17 @@ class Card(db.Model):
         db_table = 'cc_card'
 
 
+class Callerid(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    # id_cc_card = BigIntegerField()
+    id_cc_card = ForeignKeyField(Card, db_column='id_cc_card')
+    activated = CharField(default='t')
+    cid = CharField(unique=True)
+
+    class Meta:
+        db_table = 'cc_callerid'
+
+
 class CcAgent(db.Model):
     active = CharField()
     address = CharField(null=True)
@@ -311,16 +322,6 @@ class CcCallbackSpool(db.Model):
 
     class Meta:
         db_table = 'cc_callback_spool'
-
-
-class CcCallerid(db.Model):
-    activated = CharField()
-    cid = CharField(unique=True)
-    id = BigIntegerField(primary_key=True)
-    id_cc_card = BigIntegerField()
-
-    class Meta:
-        db_table = 'cc_callerid'
 
 
 class CcCallplanLcr(db.Model):

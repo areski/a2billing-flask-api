@@ -2,7 +2,7 @@ from flask_peewee.rest import RestAPI, UserAuthentication, RestResource
 from flask import request
 from auth import auth
 from app import app
-from models import CardGroup, Card
+from models import CardGroup, Card, Callerid
 import json
 
 
@@ -40,4 +40,5 @@ api = RestAPI(app, default_auth=user_auth)
 # register the models
 api.register(Card, CardResource, auth=user_auth)
 api.register(CardGroup, auth=user_auth)
+api.register(Callerid, auth=user_auth)
 api.register(auth.User, UserResource, auth=user_auth)
