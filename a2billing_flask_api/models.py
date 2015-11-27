@@ -23,7 +23,7 @@ class Card(db.Model):
     username = CharField(null=False)
     useralias = CharField()
     uipass = CharField()
-    credit = CharField()
+    credit = FloatField(default=0.0)
     tariff = CharField()
     id_didgroup = CharField(null=True)
     activated = CharField(choices=(('f', 'False'), ('t', 'True')))
@@ -119,16 +119,16 @@ class Logrefill(db.Model):
 
 
 class Logpayment(db.Model):
-    added_commission = IntegerField()
-    added_refill = IntegerField()
-    agent = BigIntegerField(db_column='agent_id', null=True)
     card = BigIntegerField(db_column='card_id')
-    date = DateTimeField(null=True)
+    date = DateTimeField(null=True, default=datetime.datetime.now)
     description = TextField(null=True)
-    id_logrefill = BigIntegerField(null=True)
     payment = DecimalField(default=0.0)
     # payment_type (amount:0, correction:1, extra fee:2,agent refund:3)
     payment_type = IntegerField(default=0)
+    id_logrefill = BigIntegerField(null=True)
+    added_commission = IntegerField(default=0)
+    added_refill = IntegerField(default=0)
+    agent = BigIntegerField(db_column='agent_id', null=True)
 
     class Meta:
         db_table = 'cc_logpayment'

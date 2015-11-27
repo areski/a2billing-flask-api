@@ -6,7 +6,7 @@ from models import CardGroup, Card, Callerid, Logrefill, Logpayment, Call, Count
 
 
 class CardAdmin(ModelAdmin):
-    columns = ('username', 'creationdate',)
+    columns = ('id', 'username', 'creationdate', 'credit', 'status',)
 
 
 class CardGroupAdmin(ModelAdmin):
