@@ -17,6 +17,11 @@ Contents:
     api-documentation
     deploy
 
+.. toctree::
+    :maxdepth: 1
+
+    resources
+
 
 
 Indices and tables

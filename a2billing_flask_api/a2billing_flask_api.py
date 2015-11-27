@@ -1,124 +1,22 @@
-import datetime
-from flask import Flask
 from flask_peewee.auth import Auth
-from flask_peewee.db import Database
 from flask_peewee.admin import Admin, ModelAdmin
 from flask_peewee.rest import RestAPI, UserAuthentication, RestResource
+from app import app, db
+from models import CardGroup, Card
 # from flask import Blueprint, abort, request, Response, session, redirect, url_for, g
 from flask import request
 import json
-from peewee import *
+from peewee import IntegrityError
 
-# Configure your A2Billing database
-DATABASE = {
-    'name': 'a2billing_db',
-    'engine': 'peewee.MySQLDatabase',
-    'user': 'root',
-    'passwd': 'password',
-}
+# from models import *
 
-app = Flask(__name__)
-app.config.from_object(__name__)
+# from auth import *
+# from admin import admin
+# from api import api
+# from views import *
 
-# Set the secret key.  keep this really secret
-# Default implementation stores all session data in a signed cookie. This requires that the secret_key is set
-app.secret_key = 'THE_SECRET_KEY'
-
-# Instantiate the db wrapper
-db = Database(app)
-
-
-@app.route('/')
-def homepage():
-    return 'Welcome to A2B Restful API!'
-
-
-class CardGroup(db.Model):
-    name = CharField()
-    description = TextField(null=True)
-    users_perms = IntegerField(default=0)
-    id_agent = IntegerField(default=0)
-
-    class Meta:
-        db_table = 'cc_card_group'
-
-
-class Card(db.Model):
-    # user = ForeignKeyField(User, related_name='tweets')
-    creationdate = DateTimeField(default=datetime.datetime.now)
-    firstusedate = CharField(null=True)
-    expirationdate = CharField(null=True)
-    enableexpire = CharField(null=True)
-    expiredays = CharField(null=True)
-    username = CharField(null=False)
-    useralias = CharField()
-    uipass = CharField()
-    credit = CharField()
-    tariff = CharField()
-    id_didgroup = CharField(null=True)
-    activated = CharField(choices=(('f', 'False'), ('t', 'True')))
-    status = IntegerField(default=1)
-    lastname = CharField(default='')
-    firstname = CharField(default='')
-    address = CharField(default='')
-    city = CharField(default='')
-    state = CharField(default='')
-    country = CharField(default='')
-    zipcode = CharField(default='')
-    phone = CharField(default='')
-    email = CharField(default='')
-    fax = CharField(default='')
-    # inuse = CharField(null=True)
-    simultaccess = IntegerField(default=0)
-    currency = CharField(default='USD')
-    # lastuse = CharField(null=True)
-    # nbused = CharField(null=True)
-    typepaid = IntegerField(default=0)
-    creditlimit = IntegerField(default=0)
-    voipcall = IntegerField(default=0)
-    sip_buddy = IntegerField(default=0)
-    iax_buddy = IntegerField(default=0)
-    language = CharField(default='en')
-    redial = CharField(default='')
-    runservice = CharField(null=True)
-    # nbservice = CharField(null=True)
-    # id_campaign = CharField(null=True)
-    # num_trials_done = CharField(null=True)
-    vat = FloatField(null=False, default=0)
-    # servicelastrun = CharField(null=True)
-    # Using DecimalField produce an error
-    initialbalance = FloatField(default=0.0)
-    invoiceday = IntegerField(default=1)
-    autorefill = IntegerField(default=0)
-    loginkey = CharField(default='')
-    mac_addr = CharField(default='00-00-00-00-00-00')
-    id_timezone = IntegerField(default=0)
-    tag = CharField(default='')
-    voicemail_permitted = IntegerField(default=0)
-    voicemail_activated = IntegerField(default=0)
-    # last_notification = CharField(null=True)
-    email_notification = CharField(default='')
-    notify_email = IntegerField(default=0)
-    credit_notification = IntegerField(default=-1)
-    id_group = IntegerField(default=1)
-    company_name = CharField(default='')
-    company_website = CharField(default='')
-    vat_rn = CharField(null=True)
-    traffic = BigIntegerField(default=0)
-    traffic_target = CharField(default='')
-    # Using DecimalField produce an error
-    discount = FloatField(default=0.0)
-    # restriction = CharField(null=True)
-    # id_seria = CharField(null=True)
-    # serial = CharField(null=True)
-    block = IntegerField(default=0)
-    lock_pin = CharField(null=True)
-    lock_date = DateTimeField(null=True)
-    max_concurrent = IntegerField(default=10)
-    # is_published = BooleanField(default=True)
-
-    class Meta:
-        db_table = 'cc_card'
+# admin.setup()
+# api.setup()
 
 
 class CardAdmin(ModelAdmin):
@@ -152,6 +50,7 @@ class CardResource(RestResource):
 # create a special resource for users that excludes email and password
 class UserResource(RestResource):
     exclude = ('password', 'email',)
+
 
 # create an Auth object for use with our flask app and database wrapper
 auth = Auth(app, db)
