@@ -5,7 +5,7 @@ from peewee import IntegrityError
 
 from admin import admin
 from api import api
-# from views import *
+from views import *
 
 admin.setup()
 api.setup()

@@ -134,6 +134,110 @@ class Logpayment(db.Model):
         db_table = 'cc_logpayment'
 
 
+class Country(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    countrycode = CharField()
+    countryname = CharField()
+    countryprefix = CharField()
+
+    class Meta:
+        db_table = 'cc_country'
+
+    def __str__(self):
+        return self.countryname
+
+
+class Did(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    # id_cc_country = IntegerField()
+    # id_cc_didgroup = BigIntegerField()
+    id_cc_didgroup = IntegerField(null=False)
+    id_cc_country = ForeignKeyField(Country, related_name='country', db_column='id_cc_country')
+    activated = IntegerField(null=False)
+    did = CharField(unique=True)
+    reserved = IntegerField(null=True)
+    iduser = BigIntegerField(null=False)
+    creationdate = DateTimeField(default=datetime.datetime.now)
+    startingdate = DateTimeField()
+    expirationdate = DateTimeField()
+    aleg_carrier_connect_charge = DecimalField()
+    aleg_carrier_connect_charge_offp = DecimalField()
+    aleg_carrier_cost_min = DecimalField()
+    aleg_carrier_cost_min_offp = DecimalField()
+    aleg_carrier_increment = IntegerField()
+    aleg_carrier_increment_offp = IntegerField()
+    aleg_carrier_initblock = IntegerField()
+    aleg_carrier_initblock_offp = IntegerField()
+    aleg_retail_connect_charge = DecimalField()
+    aleg_retail_connect_charge_offp = DecimalField()
+    aleg_retail_cost_min = DecimalField()
+    aleg_retail_cost_min_offp = DecimalField()
+    aleg_retail_increment = IntegerField()
+    aleg_retail_increment_offp = IntegerField()
+    aleg_retail_initblock = IntegerField()
+    aleg_retail_initblock_offp = IntegerField()
+    aleg_timeinterval = TextField(null=True)
+    billingtype = IntegerField(null=True)
+    connection_charge = DecimalField()
+    description = TextField(null=True)
+    fixrate = FloatField()
+    max_concurrent = IntegerField()
+    secondusedreal = IntegerField(null=True)
+    selling_rate = DecimalField()
+
+    class Meta:
+        db_table = 'cc_did'
+
+
+class DidDestination(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    destination = CharField(null=True)
+    priority = IntegerField()
+    id_cc_card = BigIntegerField()
+    id_cc_did = BigIntegerField()
+    activated = IntegerField()
+    secondusedreal = IntegerField(null=True)
+    voip_call = IntegerField(null=True)
+    validated = IntegerField(null=True)
+    # creationdate = DateTimeField()
+
+    class Meta:
+        db_table = 'cc_did_destination'
+
+
+class Call(db.Model):
+    # id = BigIntegerField(primary_key=True)
+    sessionid = CharField(default=0)
+    uniqueid = CharField(null=False)
+    card = BigIntegerField(db_column='card_id')
+    nasipaddress = CharField(null=False)
+    starttime = DateTimeField(index=True, default=datetime.datetime.now)
+    stoptime = CharField(default="0000-00-00 00:00:00")
+    buycost = DecimalField(null=True)
+    calledstation = CharField(index=True)
+    destination = IntegerField(null=True)
+    dnid = CharField(null=False)
+    id_card_package_offer = IntegerField(null=True)
+    id_did = IntegerField(null=True)
+    id_ratecard = IntegerField(null=True)
+    id_tariffgroup = IntegerField(null=True)
+    id_tariffplan = IntegerField(null=True)
+    id_trunk = IntegerField(null=True)
+    real_sessiontime = IntegerField(null=True)
+    sessionbill = FloatField(null=True)
+    sessiontime = IntegerField(null=True)
+    sipiax = IntegerField(null=True)
+    src = CharField()
+    terminatecauseid = IntegerField(index=True, null=True)
+
+    class Meta:
+        db_table = 'cc_call'
+
+
+#
+# Previous Models are currently used
+#
+
 class Agent(db.Model):
     active = CharField()
     address = CharField(null=True)
@@ -266,35 +370,6 @@ class BillingCustomer(db.Model):
 
     class Meta:
         db_table = 'cc_billing_customer'
-
-
-class Call(db.Model):
-    buycost = DecimalField(null=True)
-    calledstation = CharField(index=True)
-    card = BigIntegerField(db_column='card_id')
-    destination = IntegerField(null=True)
-    dnid = CharField()
-    id = BigIntegerField(primary_key=True)
-    id_card_package_offer = IntegerField(null=True)
-    id_did = IntegerField(null=True)
-    id_ratecard = IntegerField(null=True)
-    id_tariffgroup = IntegerField(null=True)
-    id_tariffplan = IntegerField(null=True)
-    id_trunk = IntegerField(null=True)
-    nasipaddress = CharField()
-    real_sessiontime = IntegerField(null=True)
-    sessionbill = FloatField(null=True)
-    sessionid = CharField()
-    sessiontime = IntegerField(null=True)
-    sipiax = IntegerField(null=True)
-    src = CharField()
-    starttime = DateTimeField(index=True)
-    stoptime = DateTimeField()
-    terminatecauseid = IntegerField(index=True, null=True)
-    uniqueid = CharField()
-
-    class Meta:
-        db_table = 'cc_call'
 
 
 class CallArchive(db.Model):
@@ -635,16 +710,6 @@ class Configuration(db.Model):
         db_table = 'cc_configuration'
 
 
-class Country(db.Model):
-    countrycode = CharField()
-    countryname = CharField()
-    countryprefix = CharField()
-    id = BigIntegerField(primary_key=True)
-
-    class Meta:
-        db_table = 'cc_country'
-
-
 class Currencies(db.Model):
     basecurrency = CharField()
     currency = CharField(unique=True)
@@ -654,62 +719,6 @@ class Currencies(db.Model):
 
     class Meta:
         db_table = 'cc_currencies'
-
-
-class Did(db.Model):
-    activated = IntegerField()
-    aleg_carrier_connect_charge = DecimalField()
-    aleg_carrier_connect_charge_offp = DecimalField()
-    aleg_carrier_cost_min = DecimalField()
-    aleg_carrier_cost_min_offp = DecimalField()
-    aleg_carrier_increment = IntegerField()
-    aleg_carrier_increment_offp = IntegerField()
-    aleg_carrier_initblock = IntegerField()
-    aleg_carrier_initblock_offp = IntegerField()
-    aleg_retail_connect_charge = DecimalField()
-    aleg_retail_connect_charge_offp = DecimalField()
-    aleg_retail_cost_min = DecimalField()
-    aleg_retail_cost_min_offp = DecimalField()
-    aleg_retail_increment = IntegerField()
-    aleg_retail_increment_offp = IntegerField()
-    aleg_retail_initblock = IntegerField()
-    aleg_retail_initblock_offp = IntegerField()
-    aleg_timeinterval = TextField(null=True)
-    billingtype = IntegerField(null=True)
-    connection_charge = DecimalField()
-    creationdate = DateTimeField()
-    description = TextField(null=True)
-    did = CharField(unique=True)
-    expirationdate = DateTimeField()
-    fixrate = FloatField()
-    id = BigIntegerField(primary_key=True)
-    id_cc_country = IntegerField()
-    id_cc_didgroup = BigIntegerField()
-    iduser = BigIntegerField()
-    max_concurrent = IntegerField()
-    reserved = IntegerField(null=True)
-    secondusedreal = IntegerField(null=True)
-    selling_rate = DecimalField()
-    startingdate = DateTimeField()
-
-    class Meta:
-        db_table = 'cc_did'
-
-
-class DidDestination(db.Model):
-    activated = IntegerField()
-    creationdate = DateTimeField()
-    destination = CharField(null=True)
-    id = BigIntegerField(primary_key=True)
-    id_cc_card = BigIntegerField()
-    id_cc_did = BigIntegerField()
-    priority = IntegerField()
-    secondusedreal = IntegerField(null=True)
-    validated = IntegerField(null=True)
-    voip_call = IntegerField(null=True)
-
-    class Meta:
-        db_table = 'cc_did_destination'
 
 
 class DidUse(db.Model):
